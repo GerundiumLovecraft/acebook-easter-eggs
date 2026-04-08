@@ -2,24 +2,37 @@ require("../mongodb_helper");
 const User = require("../../models/user");
 
 describe("User model", () => {
+
+  let user;
   beforeEach(async () => {
     await User.deleteMany({});
+
+    user = new User({
+      account: {
+        email: "someone@example.com",
+        password: "password",
+      },
+      profile: {
+        first_name: "Maker",
+        last_name: "Baker",
+      },
+    });
   });
 
   it("has an email address", () => {
-    const user = new User({
-      email: "someone@example.com",
-      password: "password",
-    });
-    expect(user.email).toEqual("someone@example.com");
+    expect(user.account.email).toEqual("someone@example.com");
   });
 
   it("has a password", () => {
-    const user = new User({
-      email: "someone@example.com",
-      password: "password",
-    });
-    expect(user.password).toEqual("password");
+    expect(user.account.password).toEqual("password");
+  });
+
+  it("has a first name", () => {
+    expect(user.profile.first_name).toEqual("Maker");
+  });
+
+  it("has a last name", () => {
+    expect(user.profile.last_name).toEqual("Baker");
   });
 
   it("has a first name", () => {
@@ -68,3 +81,12 @@ describe("User model", () => {
     expect(users[0].password).toEqual("password");
   });
 });
+
+
+/*
+Refactor the current tests
+it has first name
+it has last name
+it has profile pic url
+it has empty friend_list on init
+*/
