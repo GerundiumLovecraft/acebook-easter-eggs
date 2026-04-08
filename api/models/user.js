@@ -7,10 +7,11 @@ const UserSchema = new mongoose.Schema({
     // TODO: set required True to first and last Name once Signup form is complete 
     firstName: {type: String, required: false},
     lastName: {type: String, required: false}, 
-    displayName: String,
     profilePic: {type: String, default: ''}
   },
-  
+  social: {
+    friend_list: {type: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}], default: []},
+  },
 }, { timestamps: true });
 
 const User = mongoose.model("User", UserSchema);
