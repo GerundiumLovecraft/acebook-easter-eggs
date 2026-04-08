@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
+const mongoose = require("mongoose");
 
 async function create(req, res) {
 const { email, password, firstName, lastName } = req.body;
@@ -22,6 +23,10 @@ const { email, password, firstName, lastName } = req.body;
 
 async function getProfile(req, res) {
   const userId = req.params.id
+
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(400).json({ message: "Invalid user ID format in URL - use a valid MongoDB ObjectId" });
+  }
 
   try {
     const user = await User.findById(userId).select("-password");
