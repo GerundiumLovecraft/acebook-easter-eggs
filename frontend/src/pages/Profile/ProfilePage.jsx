@@ -7,10 +7,6 @@ export function ProfilePage() {
     const [profile, setProfile] = useState(null)
     const [loading, setLoading] = useState(true);
     const {id} = useParams()
-
-    //TODO: Remove console.log
-    console.log(`profile page for user id ${id}`)
-
     const navigate = useNavigate();
 
     useEffect(() => {
