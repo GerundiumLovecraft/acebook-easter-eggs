@@ -54,6 +54,7 @@ async function getProfile(req, res) {
   }
 }
 
+
 const UsersController = {
   create: create,
   getCurrentUser: getCurrentUser,
