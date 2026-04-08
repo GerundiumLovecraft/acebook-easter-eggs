@@ -4,8 +4,9 @@ const UserSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
     profile: {
-    firstName: {type: String, required: true},
-    lastName: {type: String, required: true},
+    // TODO: set required True to first and last Name once Signup form is complete 
+    firstName: {type: String, required: false},
+    lastName: {type: String, required: false}, 
     displayName: String,
     profilePic: {type: String, default: ''}
   },
