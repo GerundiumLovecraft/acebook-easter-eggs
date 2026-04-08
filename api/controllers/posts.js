@@ -15,9 +15,21 @@ async function createPost(req, res) {
   res.status(201).json({ message: "Post created", token: newToken });
 }
 
+async function likePost(req, res) {
+  const post = await Post.findById(req.params.id);
+  post.likeCount = post.likeCount + 1;
+  post.likedBy.push(req.user_id);
+  await post.save();
+  
+  const newToken = generateToken(req.user_id);
+  res.status(200).json({ message: "Post liked", token: newToken });
+}
+
 const PostsController = {
   getAllPosts: getAllPosts,
   createPost: createPost,
+  likePost: likePost,
 };
+
 
 module.exports = PostsController;
