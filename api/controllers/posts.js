@@ -52,4 +52,5 @@ const PostsController = {
   addComment: addComment,
 };
 
+
 module.exports = PostsController;
