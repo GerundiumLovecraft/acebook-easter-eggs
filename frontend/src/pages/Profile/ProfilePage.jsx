@@ -1,6 +1,10 @@
 import { useParams, useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react";
 import { getUser } from "../../services/users";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 
 
 export function ProfilePage() {
@@ -21,6 +25,7 @@ export function ProfilePage() {
         if (loggedIn) {
             getUser(id, token)
             .then((data) => {
+                console.log(data, '<----data in loggedIn')
                 setProfile(data)
                 setLoading(false)
             })
@@ -31,18 +36,40 @@ export function ProfilePage() {
         }
     }, [id, navigate]);
 
+    console.log(profile, '<----profile in ProfilePage')
+
 return (
     <div>
         {loading ? (
             <p>Loading...</p>
         ) : profile ? (
-            <>
-                <h1>{profile.profile.firstName} {profile.profile.lastName}</h1>
-                <p>Email: {profile.email}</p>
-                <p>Profile pic: {profile.profile.ProfilePic}</p>
-                <p>Created At: {profile.createdAt}</p>
-                <p>Last Updated: {profile.updatedAt}</p>
-            </>
+            <div className="container mx-auto py-10">
+                <Card className="max-w-2xl mx-auto">
+                    <CardHeader className="flex flex-row items-center gap-6">
+                    <Avatar className="h-24 w-24">
+                        <AvatarImage src={profile.profile.profilePic} />
+                        <AvatarFallback>{profile.profile.firstName[0]}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                        <CardTitle className="text-3xl font-bold">
+                        {profile.profile.firstName} {profile.profile.lastName}
+                        </CardTitle>
+                    </div>
+                    </CardHeader>
+                    
+                    <CardContent className="space-y-4">
+                    <Separator />
+                    <div>
+                        <h4 className="text-sm font-medium">Member since:</h4>
+                        <p className="text-sm text-muted-foreground mt-1">{profile.createdAt}</p>
+                    </div>
+                    
+                    {profile && (
+                        <Button variant="outline" className="w-full">Edit Profile</Button>
+                    )}
+                    </CardContent>
+                </Card>
+</div>
         ) : (
             <p>User not found</p>
         )}
