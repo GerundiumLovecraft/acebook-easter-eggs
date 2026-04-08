@@ -28,6 +28,30 @@ describe("/users", () => {
       const newUser = users[users.length - 1];
       expect(newUser.email).toEqual("scarconstt@email.com");
     });
+
+    test("the password is hashed before being stored", async () => {
+      await request(app)
+        .post("/users")
+        .send({ email: "sarah@email.com", password: "1234" });
+
+      const users = await User.find();
+      const newUser = users[users.length - 1];
+      expect(newUser.password).not.toEqual("1234");
+      expect(newUser.password).toMatch(/^\$2b\$/);
+    });
+
+    test("user can sign up and then log in", async () => {
+      await request(app)
+        .post("/users")
+        .send({ email: "maria@email.com", password: "mypassword" });
+
+      const response = await request(app)
+        .post("/tokens")
+        .send({ email: "maria@email.com", password: "mypassword" });
+
+      expect(response.status).toEqual(201);
+      expect(response.body.token).not.toEqual(undefined);
+    });
   });
 
   describe("POST, when password is missing", () => {
@@ -61,6 +85,20 @@ describe("/users", () => {
 
       const users = await User.find();
       expect(users.length).toEqual(0);
+    });
+  });
+
+  describe("POST, when email already exists", () => {
+    test("cannot sign up with an email that already exists", async () => {
+      await request(app)
+        .post("/users")
+        .send({ email: "duplicate@email.com", password: "1234" });
+
+      const response = await request(app)
+        .post("/users")
+        .send({ email: "duplicate@email.com", password: "1234" });
+
+      expect(response.status).toEqual(400);
     });
   });
 });
