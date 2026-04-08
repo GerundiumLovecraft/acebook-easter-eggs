@@ -39,7 +39,9 @@ return (
             <>
                 <h1>{profile.profile.firstName} {profile.profile.lastName}</h1>
                 <p>Email: {profile.email}</p>
-                <p>Bio: {profile.profile.bio}</p>
+                <p>Profile pic: {profile.profile.ProfilePic}</p>
+                <p>Created At: {profile.createdAt}</p>
+                <p>Last Updated: {profile.updatedAt}</p>
             </>
         ) : (
             <p>User not found</p>
