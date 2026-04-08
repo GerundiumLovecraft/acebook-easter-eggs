@@ -21,6 +21,7 @@ const { email, password, firstName, lastName } = req.body;
 }
 
 
+
 const UsersController = {
   create: create,
 };
