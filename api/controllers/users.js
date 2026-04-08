@@ -54,6 +54,18 @@ async function getProfile(req, res) {
   }
 }
 
+  try {
+    const user = await User.findById(userId).select("-password");
+
+    if (!user) {
+      return res.status(400).json({message: "User not found"});
+    }
+    res.status(200).json(user);
+  } catch(err) {
+    console.log(err);
+    res.status(400).json({message: "Error fetching profile"})
+  }
+}
 
 const UsersController = {
   create: create,
