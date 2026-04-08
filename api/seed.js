@@ -1,4 +1,6 @@
-// seed.js
+// To reseed the database, run 'node seed.js' from the /api folder
+
+
 require("dotenv").config();
 const mongoose = require("mongoose");
 const User = require("./models/user");
