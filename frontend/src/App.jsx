@@ -1,17 +1,28 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
 
 import "./App.css";
-import { HomePage } from "./pages/Home/HomePage";
+
 import { LoginPage } from "./pages/Login/LoginPage";
 import { SignupPage } from "./pages/Signup/SignupPage";
 import { FeedPage } from "./pages/Feed/FeedPage";
 import { ProfilePage } from "./pages/Profile/ProfilePage"
+import ProtectedRoute from "./layouts/ProtectedRoute";
+import MainLayout from "./layouts/MainLayout";
 
 // docs: https://reactrouter.com/en/main/start/overview
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <HomePage />,
+    element: (
+      <ProtectedRoute>
+        <MainLayout />
+      </ProtectedRoute>
+    ),
+    children: [
+      { index: true, element: <Navigate to="/posts" replace /> },
+      { path: "posts", element: <FeedPage/> },
+      { path: "/users/:id", element: <ProfilePage/> },
+    ]
   },
   {
     path: "/login",
@@ -21,14 +32,6 @@ const router = createBrowserRouter([
     path: "/signup",
     element: <SignupPage />,
   },
-  {
-    path: "/posts",
-    element: <FeedPage />,
-  },
-  {
-    path: "/users/:id",
-    element: <ProfilePage />
-  }
 ]);
 
 function App() {

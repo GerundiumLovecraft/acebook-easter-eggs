@@ -31,7 +31,7 @@ function NavBar() {
 
         {menuOpen && (
           <div className="dropdown-menu">
-            <Link to="/profile">My Profile</Link>
+            <Link to="/users/${user.id}">My Profile</Link>
             <Link to="/login" className="logout">
               <PowerIcon className="dropdown-icon" />
               Log Out
