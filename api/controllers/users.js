@@ -21,6 +21,21 @@ const { email, password, firstName, lastName } = req.body;
   }
 }
 
+async function getCurrentUser(req, res) {
+  try {
+    const user = await User.findById(req.user_id).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(user);
+  } catch (err) {
+    console.error(err);
+    res.status(400).json({ message: "Error fetching current user" });
+  }
+}
+
 async function getProfile(req, res) {
   const userId = req.params.id
 
@@ -43,6 +58,7 @@ async function getProfile(req, res) {
 
 const UsersController = {
   create: create,
+  getCurrentUser: getCurrentUser,
   getProfile: getProfile
 };
 
