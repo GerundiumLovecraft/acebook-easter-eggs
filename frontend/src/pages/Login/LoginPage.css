@@ -1,0 +1,19 @@
+h1 {
+    padding-top: 50%;
+    font-family: Verdana;
+    font-size: 3em;
+}
+
+form {
+    width: 350px;
+    margin: auto;
+    line-height: 2em;
+}
+
+label {
+    float: left;
+}
+
+.FormField {
+    float: right;
+}
