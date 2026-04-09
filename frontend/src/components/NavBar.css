@@ -1,12 +1,13 @@
 .navbar {
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: space-between;
   padding: 10px 24px;
   width: 100%;
   box-sizing: border-box;
   background-color: rgb(0, 0, 0);
   border-bottom: 2px solid #464848;
+  position: relative;
 }
 
 .navbar-search {
@@ -20,6 +21,10 @@
 .navbar-links {
   display: flex;
   gap: 50px;
+  justify-content: center;
+  left: 50%;
+  transform: translateX(-50%);
+  position: absolute;
 }
 
 .navbar-links a {
@@ -69,6 +74,7 @@
   flex-direction: column;
   min-width: 15px;
   z-index: 100;
+  gap: 10px;
 }
 
 .dropdown-menu a {
@@ -84,6 +90,8 @@
 
 .dropdown-menu .logout {
   color: #fffefe;
+  background-color: rgb(0, 0, 0);
+  border: none;
 }
 
 .dropdown-menu .logout:hover {
@@ -97,5 +105,6 @@
 }
 
 .logout {
-    margin-left: 5px;
+  display: flex;
+  gap: 10px;
 }
