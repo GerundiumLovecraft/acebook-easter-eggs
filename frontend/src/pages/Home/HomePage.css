@@ -1,4 +1,11 @@
-.home {
+h1 {
+  padding-top: 50%;
+  font-family: Verdana;
+  font-size: 3em;
+}
+
+.userLinks {
   display: flex;
   flex-direction: column;
+  line-height: 2em;
 }
