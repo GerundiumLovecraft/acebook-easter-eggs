@@ -2,7 +2,9 @@ const FriendRequest = require("../models/friendRequest");
 const { generateToken } = require("../lib/token");
 
 async function getFriendRequestsById(req, res) {
-    const posts = await FriendRequest.find({ $or: [{from: req.user_id}, { to: req.user_id }]});
+    const friendRequestsRaw = await FriendRequest.find({ $or: [{from: req.user_id}, { to: req.user_id }]});
+    
+
 
 
 };
