@@ -43,33 +43,11 @@ return (
         {loading ? (
             <p>Loading...</p>
         ) : profile ? (
-            <div className="container mx-auto py-10">
-                <Card className="max-w-2xl mx-auto">
-                    <CardHeader className="flex flex-row items-center gap-6">
-                    <Avatar className="h-24 w-24">
-                        <AvatarImage src={profile.profile.profilePic} />
-                        <AvatarFallback>{profile.profile.firstName[0]}</AvatarFallback>
-                    </Avatar>
-                    <div>
-                        <CardTitle className="text-3xl font-bold">
-                        {profile.profile.firstName} {profile.profile.lastName}
-                        </CardTitle>
-                    </div>
-                    </CardHeader>
-                    
-                    <CardContent className="space-y-4">
-                    <Separator />
-                    <div>
-                        <h4 className="text-sm font-medium">Member since:</h4>
-                        <p className="text-sm text-muted-foreground mt-1">{profile.createdAt}</p>
-                    </div>
-                    
-                    {profile && (
-                        <Button variant="outline" className="w-full">Edit Profile</Button>
-                    )}
-                    </CardContent>
-                </Card>
-</div>
+            <>
+                <h1>{profile.profile.firstName} {profile.profile.lastName}</h1>
+                <p>Email: {profile.email}</p>
+                <p>Bio: {profile.profile.bio}</p>
+            </>
         ) : (
             <p>User not found</p>
         )}
