@@ -23,6 +23,7 @@ function createToken(userId) {
 }
 
 let token;
+let userId;
 describe("/posts", () => {
   beforeAll(async () => {
     const user = new User({
@@ -236,6 +237,21 @@ describe("/posts", () => {
         .set("Authorization", `Bearer ${token}`);
 
       expect(response.body.token).not.toEqual(undefined);
+    });
+
+    test("unable to like a post more than once", async () => {
+      const post = new Post({ message: "You already liked me" });
+      await post.save();
+
+      await request(app)
+        .post(`/posts/${post._id}/like`)
+        .set("Authorization", `Bearer ${token}`);
+
+      const response = await request(app)
+        .post(`/posts/${post._id}/like`)
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.status).toEqual(400);
     });
   });
 

@@ -17,6 +17,11 @@ async function createPost(req, res) {
 
 async function likePost(req, res) {
   const post = await Post.findById(req.params.id);
+
+  if (post.likedBy.includes(req.user_id)) {
+    return res.status(400).json({ message: "Already liked" });
+  }
+
   post.likeCount = post.likeCount + 1;
   post.likedBy.push(req.user_id);
   await post.save();
