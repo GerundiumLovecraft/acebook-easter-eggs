@@ -1,5 +1,5 @@
 require("../mongodb_helper");
-const FriendRequest = require("../../models/friend_request");
+const FriendRequest = require("../../models/friendRequest");
 const {default: mongoose} = require("mongoose");
 
 describe("FriendRequest model", () => {
