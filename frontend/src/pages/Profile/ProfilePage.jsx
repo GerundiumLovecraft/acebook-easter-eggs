@@ -26,6 +26,7 @@ export function ProfilePage() {
                 setProfile(profileData);
                 setCurrentUser(currentUserData);
                 setLoading(false);
+                localStorage.setItem("token");
             })
             .catch((error) => {
                 console.log(error);
