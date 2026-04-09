@@ -102,3 +102,25 @@ describe("/users", () => {
     });
   });
 });
+
+
+describe("GET /users/me", () => {
+    test("returns the current user without the password", async () => {
+      const { token, userData } = await createUserAndLogin({
+        email: "currentuser@email.com",
+        password: "1234",
+        firstName: "Current",
+        lastName: "User",
+      });
+
+      const response = await request(app)
+        .get("/users/me")
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body.email).toEqual(userData.email);
+      expect(response.body.profile.firstName).toEqual("Current");
+      expect(response.body.profile.lastName).toEqual("User");
+      expect(response.body.password).toBeUndefined();
+    });
+  });
