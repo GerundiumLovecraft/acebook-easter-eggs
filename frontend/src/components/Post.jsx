@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { getComments, addComment } from "../services/comments";
 import { jwtDecode } from "jwt-decode";
 
-function Post({ post }) {
+function Post({ post, token }) {
   const {
     message,
     image,
