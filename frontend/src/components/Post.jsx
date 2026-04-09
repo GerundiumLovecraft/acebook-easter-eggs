@@ -1,4 +1,5 @@
 import "./Post.css";
+import LikeButton from "./LikeButton";
 import { useState, useEffect } from "react";
 import { getComments, addComment } from "../services/comments";
 import { jwtDecode } from "jwt-decode";
@@ -81,7 +82,12 @@ return (
 
       {/* ACTIONS */}
       <div className="post-actions">
-        <button>❤️ Like</button>
+        <LikeButton
+          postId={post._id}
+          likeCount={post.likeCount}
+          likedBy={post.likedBy}
+          token={token}
+        />
 
         <button onClick={() => setShowComments(!showComments)}>
           💬 Comment
