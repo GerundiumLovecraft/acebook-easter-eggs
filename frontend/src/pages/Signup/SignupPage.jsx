@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 
 import { signup } from "../../services/authentication";
 
+import "./SignupPage.css"
+
 export function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,27 +29,55 @@ export function SignupPage() {
     setPassword(event.target.value);
   }
 
+
+  // PLEASE NOTE: actual inputs for first/last name and password validation to follow in a future update. All comments will be then removed.
   return (
-    <>
+    <div>
+    <h1>Welcome in!</h1>
       <h2>Signup</h2>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="email">Email:</label>
-        <input
+      <label htmlFor="email">First name: </label>
+        <input className="FormField"
+          // id="email"
+          // type="text"
+          // value={email}
+          // onChange={handleEmailChange}
+        />
+        <br />
+        <label htmlFor="email">Last name: </label>
+        <input className="FormField"
+          // id="email"
+          // type="text"
+          // value={email}
+          // onChange={handleEmailChange}
+        />
+        <br />
+        <label htmlFor="email">Email: </label>
+        <input className="FormField"
           id="email"
           type="text"
           value={email}
           onChange={handleEmailChange}
         />
-        <label htmlFor="password">Password:</label>
-        <input
-          placeholder="Password"
+        <br />
+        <label htmlFor="password">Password: </label>
+        <input className="FormField"
           id="password"
           type="password"
           value={password}
           onChange={handlePasswordChange}
         />
+        <br />
+        <label htmlFor="password">Re-enter Password: </label>
+        <input className="FormField"
+          id="password"
+          type="password"
+          value={password}
+          onChange={handlePasswordChange}
+        />
+        <br />
         <input role="submit-button" id="submit" type="submit" value="Submit" />
       </form>
-    </>
+    </div>
   );
 }
