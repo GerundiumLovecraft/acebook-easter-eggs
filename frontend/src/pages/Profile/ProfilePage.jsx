@@ -33,7 +33,7 @@ export function ProfilePage() {
             });
     }, [id, navigate]);
 
-    const isOwnProfile = currentUser?._id === id;
+    const isOwnProfile = currentUser?._id === profile?._id;
 
     return (
         <div>
