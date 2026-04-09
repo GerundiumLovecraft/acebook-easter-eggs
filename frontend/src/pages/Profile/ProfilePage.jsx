@@ -1,10 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react";
 import { getUser } from "../../services/users";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
 
 
 export function ProfilePage() {
@@ -25,7 +21,6 @@ export function ProfilePage() {
         if (loggedIn) {
             getUser(id, token)
             .then((data) => {
-                console.log(data, '<----data in loggedIn')
                 setProfile(data)
                 setLoading(false)
             })
@@ -36,8 +31,6 @@ export function ProfilePage() {
         }
     }, [id, navigate]);
 
-    console.log(profile, '<----profile in ProfilePage')
-
 return (
     <div>
         {loading ? (
@@ -46,7 +39,9 @@ return (
             <>
                 <h1>{profile.profile.firstName} {profile.profile.lastName}</h1>
                 <p>Email: {profile.email}</p>
-                <p>Bio: {profile.profile.bio}</p>
+                <p>Profile pic: {profile.profile.ProfilePic}</p>
+                <p>Created At: {profile.createdAt}</p>
+                <p>Last Updated: {profile.updatedAt}</p>
             </>
         ) : (
             <p>User not found</p>
