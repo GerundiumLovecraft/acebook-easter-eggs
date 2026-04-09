@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import LogoutButton from "./LogoutButton";
 import "./NavBar.css";
 
 import {
   UserCircleIcon,
   ChevronDownIcon,
-  PowerIcon,
 } from "@heroicons/react/24/solid";
 
 function NavBar() {
@@ -18,6 +18,7 @@ function NavBar() {
       <div className="navbar-links">
         <Link to="/posts">Home</Link>
         <Link to="/friends">Friends</Link>
+        <Link to="/notifications">Notifications</Link>
       </div>
 
       <div className="navbar-profile">
@@ -32,10 +33,7 @@ function NavBar() {
         {menuOpen && (
           <div className="dropdown-menu">
             <Link to="/users/${user.id}">My Profile</Link>
-            <Link to="/login" className="logout">
-              <PowerIcon className="dropdown-icon" />
-              Log Out
-            </Link>
+            <LogoutButton />
           </div>
         )}
       </div>
