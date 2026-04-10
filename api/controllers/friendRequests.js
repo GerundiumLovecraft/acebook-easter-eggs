@@ -11,13 +11,15 @@ async function getFriendRequestsById(req, res) {
         const friendRequestsRaw = await FriendRequest.find({ 
             $or: [{from: UID}, { to: UID }],
             status: 'pending'
-        });
+        })
+            .populate('from')
+            .populate('to');
 
         // Sort the requests to incoming and outgoing
         const friendRequestSorted = friendRequestsRaw.reduce((requests, request) => {
-            if (request.to.toString() === UID) {
+            if (request.to.id === UID) {
                 requests.incoming.push(request);
-            } else if (request.from.toString() === UID) {
+            } else if (request.from.id === UID) {
                 requests.outgoing.push(request);
             };
 
@@ -67,14 +69,16 @@ async function sendRequest(req, res) {
     }
 };
 
-async function sendReponse(req, res) {
+async function sendResponse(req, res) {
     try {
         const requestID = req.params.request_id;
         const updatedStatus = req.body.status;
 
         const friendRequest = await FriendRequest.findOne({
-            _id: mongoose.Types.ObjectId(requestID),
-        }).populate('from').populate('to');
+            _id: new mongoose.Types.ObjectId(requestID),
+        })
+            .populate('from')
+            .populate('to');
 
         if (req.user_id !== friendRequest.to.id) {
             return res.status(401).json({ message: "unauthorised user"});
@@ -110,7 +114,7 @@ async function sendReponse(req, res) {
 const FriendRequestsControler = {
     getFriendRequestsById: getFriendRequestsById,
     sendRequest: sendRequest,
-    sendReponse: sendReponse,   
+    sendResponse: sendResponse,   
 }
 
 module.exports = FriendRequestsControler;

@@ -6,10 +6,10 @@ const User = require("../models/user");
 
 const rawUsers = [
   { email: "alice.johnson@example.com", password: "Password1!", firstName: "Alice", lastName: "Johnson" },
-  { email: "bob.smith@example.com",     password: "Password2!", firstName: "Bob",   lastName: "Smith"   },
-  { email: "carol.white@example.com",   password: "Password3!", firstName: "Carol", lastName: "White"   },
-  { email: "david.brown@example.com",   password: "Password4!", firstName: "David", lastName: "Brown"   },
-  { email: "eve.davis@example.com",     password: "Password5!", firstName: "Eve",   lastName: "Davis"   },
+  { email: "bob.smith@example.com", password: "Password2!", firstName: "Bob", lastName: "Smith" },
+  { email: "carol.white@example.com", password: "Password3!", firstName: "Carol", lastName: "White" },
+  { email: "david.brown@example.com", password: "Password4!", firstName: "David", lastName: "Brown" },
+  { email: "eve.davis@example.com", password: "Password5!", firstName: "Eve", lastName: "Davis" },
 ];
 
 const friendRequestPairs = [

@@ -10,7 +10,7 @@ const UserSchema = new mongoose.Schema({
     profilePic: {type: String, default: ''}
   },
   social: {
-    friend_list: {type: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}], default: []},
+    friendList: {type: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}], default: []},
   },
 }, { timestamps: true });
 

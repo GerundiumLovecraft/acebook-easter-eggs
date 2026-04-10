@@ -5,6 +5,6 @@ const FriendRequestsControler = require("../controllers/friendRequests");
 
 router.get("/", FriendRequestsControler.getFriendRequestsById);
 router.post("/", FriendRequestsControler.sendRequest);
-router.put("/:request_id", FriendRequestsControler.sendReponse);
+router.put("/:request_id", FriendRequestsControler.sendResponse);
 
 module.exports = router;
