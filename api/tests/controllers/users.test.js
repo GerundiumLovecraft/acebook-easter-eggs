@@ -39,6 +39,10 @@ describe("/users", () => {
   }
 
 
+  afterEach(async () => {
+    await User.deleteMany({});
+  });
+
   describe("POST, when email and password are provided", () => {
     test("the response code is 201", async () => {
       const response = await request(app)
