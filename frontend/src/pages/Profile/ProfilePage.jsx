@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react";
 import { getUser, getCurrentUser, updateCurrentUser } from "../../services/users";
+import { formatCreatedAt, formatLastUpdated } from "../../utils/dates";
 
 
 export function ProfilePage() {
@@ -125,8 +126,8 @@ export function ProfilePage() {
             {nameSection}
             {emailSection}
             <p>Profile pic: {profilePic}</p>
-            <p>Created At: {createdAt}</p>
-            <p>Last Updated: {updatedAt}</p>
+            <p>Member since: {formatCreatedAt(createdAt)}</p>
+            <p>Last active: {formatLastUpdated(updatedAt)}</p>
             {actionButtons}
         </div>
     );
