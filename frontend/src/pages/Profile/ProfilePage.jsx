@@ -79,6 +79,7 @@ export function ProfilePage() {
             setIsEditing(false);
         } catch (error) {
             setSaveError(error.message);
+            console.error(saveError)
         } finally {
             setIsSaving(false);
         }
@@ -112,7 +113,7 @@ export function ProfilePage() {
 
     const actionButtons = isEditing ? (
     <>
-        <button onClick={handleSaveClick}>Save</button>
+        {isSaving ? <button disabled={true}>Saving...</button> : <button onClick={handleSaveClick}>Save</button>}
         <button onClick={handleCancelClick}>Cancel</button>
     </>
     ) : (
