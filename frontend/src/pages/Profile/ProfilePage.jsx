@@ -126,7 +126,7 @@ export function ProfilePage() {
             {nameSection}
             {emailSection}
             <p>Profile pic: {profilePic}</p>
-            <p>Member since: {formatCreatedAt(createdAt)}</p>
+            <p>Joined: {formatCreatedAt(createdAt)}</p>
             <p>Last active: {formatLastUpdated(updatedAt)}</p>
             {actionButtons}
         </div>

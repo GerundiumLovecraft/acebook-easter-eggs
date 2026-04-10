@@ -2,17 +2,19 @@ export function formatCreatedAt(createdAt) {
     if (!createdAt) return "";
 
     return new Date(createdAt).toLocaleDateString("en-GB", {
-        day: "numeric",
         month: "long",
         year: "numeric",
     });
 }
 
 export function formatLastUpdated(updatedAt) {
+    if (!updatedAt) return "";
+
     const updatedDate = new Date(updatedAt);
     const now = new Date();
 
     const diffInMs = now - updatedDate;
+    const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
     const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
     const diffInDays = Math.floor(diffInHours / 24);
 
@@ -24,5 +26,9 @@ export function formatLastUpdated(updatedAt) {
         return `${diffInHours} hour${diffInHours > 1 ? "s" : ""} ago`;
     }
 
-    return "less than an hour ago";
+    if (diffInMinutes >= 1) {
+        return `${diffInMinutes} minute${diffInMinutes > 1 ? "s" : ""} ago`;
+    }
+
+    return "less than a minute ago";
 }
