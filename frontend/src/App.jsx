@@ -21,7 +21,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/posts" replace /> },
       { path: "posts", element: <FeedPage/> },
-      { path: "/users/:id", element: <ProfilePage/> },
+      { path: "users/:id", element: <ProfilePage/> },
     ]
   },
   {
