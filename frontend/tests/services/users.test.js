@@ -1,7 +1,7 @@
 import createFetchMock from "vitest-fetch-mock";
 import { describe, vi, beforeEach, test, expect } from "vitest";
 
-import { getUser, getCurrentUser } from "../../src/services/users";
+import { getUser, getCurrentUser, updateCurrentUser } from "../../src/services/users";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -112,6 +112,91 @@ describe("users service", () => {
 
             await expect(getCurrentUser(testToken)).rejects.toThrow(
                 "Could not fetch current user"
+            );
+        });
+    });
+    describe("updateCurrentUser", () => {
+        test("calls the backend url for the current user with PATCH", async () => {
+            const testToken = "testToken";
+            const updates = {
+                firstName: "Bob",
+                lastName: "Smith",
+            };
+
+            fetch.mockResponseOnce(
+                JSON.stringify({
+                    _id: "99999",
+                    email: "current@test.com",
+                    profile: {
+                        firstName: "Bob",
+                        lastName: "Smith",
+                    },
+                }),
+                { status: 200 }
+            );
+
+            await updateCurrentUser(updates, testToken);
+
+            const fetchArguments = fetch.mock.lastCall;
+            const url = fetchArguments[0];
+            const options = fetchArguments[1];
+
+            expect(url).toEqual(`${BACKEND_URL}/users/me`);
+            expect(options.method).toEqual("PATCH");
+            expect(options.headers["Content-Type"]).toEqual("application/json");
+            expect(options.headers.Authorization).toEqual(`Bearer ${testToken}`);
+            expect(options.body).toEqual(JSON.stringify(updates));
+        });
+
+        test("returns the updated user data if the request was successful", async () => {
+            const testToken = "testToken";
+            const updates = {
+                firstName: "Bob",
+                lastName: "Smith",
+            };
+
+            const mockUpdatedUser = {
+                _id: "99999",
+                email: "current@test.com",
+                profile: {
+                    firstName: "Bob",
+                    lastName: "Smith",
+                },
+            };
+
+            fetch.mockResponseOnce(JSON.stringify(mockUpdatedUser), { status: 200 });
+
+            const user = await updateCurrentUser(updates, testToken);
+
+            expect(user).toEqual(mockUpdatedUser);
+        });
+
+        test("throws an error with the backend message if the request failed", async () => {
+            const testToken = "testToken";
+            const updates = {
+                firstName: "Bob",
+            };
+
+            fetch.mockResponseOnce(
+                JSON.stringify({ message: "Could not update user" }),
+                { status: 400 }
+            );
+
+            await expect(updateCurrentUser(updates, testToken)).rejects.toThrow(
+                "Could not update user"
+            );
+        });
+
+        test("throws the fallback error message if the backend does not return one", async () => {
+            const testToken = "testToken";
+            const updates = {
+                firstName: "Bob",
+            };
+
+            fetch.mockResponseOnce(JSON.stringify({}), { status: 500 });
+
+            await expect(updateCurrentUser(updates, testToken)).rejects.toThrow(
+                "Could not update user"
             );
         });
     });
