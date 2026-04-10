@@ -1,12 +1,20 @@
 import { useParams, useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react";
-import { getUser, getCurrentUser } from "../../services/users";
+import { getUser, getCurrentUser, updateCurrentUser } from "../../services/users";
 
 
 export function ProfilePage() {
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
     const [currentUser, setCurrentUser] = useState(null);
+    const [formData, setFormData] = useState({
+        email: "",
+        firstName: "",
+        lastName: ""
+    })
+    const [saveError, setSaveError] = useState("")
+    const [isSaving, setIsSaving] = useState(false)
+    const [isEditing, setIsEditing] = useState(false)
     const {id} = useParams()
     const navigate = useNavigate();
 
@@ -35,22 +43,90 @@ export function ProfilePage() {
 
     const isOwnProfile = currentUser?._id === profile?._id;
 
+    function handleEditClick() {
+        setFormData({
+            email: profile.email || "",
+            firstName: profile.profile?.firstName || "",
+            lastName: profile.profile?.lastName || ""
+        })
+        setSaveError("")
+        setIsEditing(true)
+    }
+
+    function handleChange(event) {
+        const { name, value } = event.target;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    }
+
+    function handleCancelClick() {
+        setIsEditing(false);
+        setSaveError("");
+    }
+
+    async function handleSaveClick() {
+        setIsSaving(true);
+        setSaveError("");
+
+        try {
+            const token = localStorage.getItem("token");
+            const result = await updateCurrentUser(formData, token);
+
+            setProfile(result.user);
+            setCurrentUser(result.user);
+            setIsEditing(false);
+        } catch (error) {
+            setSaveError(error.message);
+        } finally {
+            setIsSaving(false);
+        }
+    }
+
+    if (loading) {
+        return <p>Loading...</p>;
+    }
+
+    if (!profile) {
+        return <p>User not found</p>;
+    }
+
+    const { email, createdAt, updatedAt } = profile;
+    const { firstName, lastName, profilePic } = profile.profile;
+
+    const nameSection = isEditing ? (
+        <>
+            <input name="firstName" value={formData.firstName} onChange={handleChange} />
+            <input name="lastName" value={formData.lastName} onChange={handleChange} />
+        </>
+        ) : (
+            <h1>{firstName} {lastName}</h1>
+        );
+
+    const emailSection = isEditing ? (
+            <input name="email" value={formData.email} onChange={handleChange} />
+        ) : (
+            <p>Email: {email}</p>
+        );
+
+    const actionButtons = isEditing ? (
+    <>
+        <button onClick={handleSaveClick}>Save</button>
+        <button onClick={handleCancelClick}>Cancel</button>
+    </>
+    ) : (
+        isOwnProfile && <button onClick={handleEditClick}>Edit Profile</button>
+    );
+
     return (
         <div>
-            {loading ? (
-                <p>Loading...</p>
-            ) : profile ? (
-                <>
-                    <h1>{profile.profile.firstName} {profile.profile.lastName}</h1>
-                    <p>Email: {profile.email}</p>
-                    <p>Profile pic: {profile.profile.profilePic}</p>
-                    <p>Created At: {profile.createdAt}</p>
-                    <p>Last Updated: {profile.updatedAt}</p>
-                    {isOwnProfile && <button>Edit Profile</button>}
-                </>
-            ) : (
-                <p>User not found</p>
-            )}
+            {nameSection}
+            {emailSection}
+            <p>Profile pic: {profilePic}</p>
+            <p>Created At: {createdAt}</p>
+            <p>Last Updated: {updatedAt}</p>
+            {actionButtons}
         </div>
     );
 
