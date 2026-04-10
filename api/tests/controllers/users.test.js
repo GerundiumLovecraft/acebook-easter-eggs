@@ -243,6 +243,5 @@ describe("/users", () => {
       expect(response.body.password).toBeUndefined();
     });
   });
-});
 
 
