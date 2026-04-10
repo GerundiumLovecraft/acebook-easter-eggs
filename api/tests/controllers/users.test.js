@@ -35,6 +35,35 @@ describe("/users", () => {
     };
   }
 
+    // this is a helper to stop having to create and login a user for every test
+  async function createUserAndLogin(overrides = {}) {
+    const userData = {
+      email: "bob@email.com",
+      password: "mypassword",
+      firstName: "Bob",
+      lastName: "Smith",
+      ...overrides,
+    };
+
+    await request(app).post("/users").send(userData);
+
+    const loginResponse = await request(app)
+      .post("/tokens")
+      .send({
+        email: userData.email,
+        password: userData.password,
+      });
+
+    const user = await User.findOne({ email: userData.email });
+
+    return {
+      user,
+      token: loginResponse.body.token,
+      userData,
+    };
+  }
+
+
   describe("POST, when email and password are provided", () => {
     test("the response code is 201", async () => {
       const response = await request(app)
@@ -194,8 +223,7 @@ describe("/users", () => {
   });
 });
 
-
-describe("GET /users/me", () => {
+  describe("GET /users/me", () => {
     test("returns the current user without the password", async () => {
       const { token, userData } = await createUserAndLogin({
         email: "currentuser@email.com",
@@ -215,3 +243,6 @@ describe("GET /users/me", () => {
       expect(response.body.password).toBeUndefined();
     });
   });
+});
+
+
