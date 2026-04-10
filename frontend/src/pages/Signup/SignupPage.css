@@ -17,3 +17,7 @@ label {
 .FormField {
     float: right;
 }
+
+.errorMessage {
+    colour: rgb(251, 57, 57);
+}
