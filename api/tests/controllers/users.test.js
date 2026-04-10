@@ -151,6 +151,51 @@ describe("/users", () => {
       expect(response.body.password).toBeUndefined();
     });
   });
+  describe("GET /users/:id", () => {
+    test("returns a users profile without the password", async () => {
+      const { user, token } = await createUserAndLogin({
+        email: "profile@email.com",
+        password: "1234",
+        firstName: "Profile",
+        lastName: "Person",
+      });
+
+      const response = await request(app)
+        .get(`/users/${user._id}`)
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body._id).toEqual(user._id.toString());
+      expect(response.body.email).toEqual("profile@email.com");
+      expect(response.body.profile.firstName).toEqual("Profile");
+      expect(response.body.profile.lastName).toEqual("Person");
+      expect(response.body.password).toBeUndefined();
+    });
+
+    test("returns 400 for an invalid user id format", async () => {
+      const { token } = await createUserAndLogin();
+
+      const response = await request(app)
+        .get("/users/not-a-valid-id")
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.statusCode).toBe(400);
+      expect(response.body.message).toEqual(
+        "Invalid user ID format in URL - use a valid MongoDB ObjectId"
+      );
+    });
+
+    test("returns 400 when the user does not exist", async () => {
+      const { token } = await createUserAndLogin();
+
+      const response = await request(app)
+        .get("/users/507f1f77bcf86cd799439011")
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.statusCode).toBe(400);
+      expect(response.body.message).toEqual("User not found");
+    });
+  });
 });
 
 
