@@ -82,28 +82,37 @@ describe("User model", () => {
     const user = new User({
       email: "someone@example.com",
       password: "password",
-      firstName: "John",
-      lastName: "Smith"
+      profile: {
+        firstName: "John",
+        lastName: "Smith"
+      }
     })
+    expect(user.profile.firstName).toEqual("John");
   })
 
-  it("has a LastName", () => {
+  it("has a lastName", () => {
     const user = new User({
       email: "someone@example.com",
       password: "password",
-      firstName: "John",
-      lastName: "Smith"
+      profile: {
+        firstName: "John",
+        lastName: "Smith"
+      }
     })
+    expect(user.profile.lastName).toEqual("Smith");
   })
 
   it("has a profilePic", () => {
     const user = new User ({
       email: "someone@example.com",
       password: "password",
-      firstName: "John",
-      lastName: "Smith",
-      profilePic: "http://someprofilepic.com"
+      profile: {
+        firstName: "John",
+        lastName: "Smith",
+        profilePic: "http://someprofilepic.com"
+      }
     })
+    expect(user.profile.profilePic).toEqual("http://someprofilepic.com");
   })
 
   it("can list all users", async () => {
