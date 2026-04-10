@@ -6,9 +6,6 @@ const User = require("../../models/user");
 require("../mongodb_helper");
 
 describe("/users", () => {
-  beforeEach(async () => {
-    await User.deleteMany({});
-  });
 
     // this is a helper to stop having to create and login a user for every test
   async function createUserAndLogin(overrides = {}) {
@@ -37,11 +34,6 @@ describe("/users", () => {
       userData,
     };
   }
-
-
-  afterEach(async () => {
-    await User.deleteMany({});
-  });
 
   describe("POST, when email and password are provided", () => {
     test("the response code is 201", async () => {
