@@ -32,7 +32,7 @@ function NavBar() {
 
         {menuOpen && (
           <div className="dropdown-menu">
-            <Link to="/users/${user.id}">My Profile</Link>
+            <Link to={`users/me`}>My Profile</Link>
             <LogoutButton />
           </div>
         )}
