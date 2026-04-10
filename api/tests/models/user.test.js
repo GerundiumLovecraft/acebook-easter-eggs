@@ -78,6 +78,34 @@ describe("User model", () => {
     })
   })
 
+  it("has a first name", () => {
+    const user = new User({
+      email: "someone@example.com",
+      password: "password",
+      firstName: "John",
+      lastName: "Smith"
+    })
+  })
+
+  it("has a LastName", () => {
+    const user = new User({
+      email: "someone@example.com",
+      password: "password",
+      firstName: "John",
+      lastName: "Smith"
+    })
+  })
+
+  it("has a profilePic", () => {
+    const user = new User ({
+      email: "someone@example.com",
+      password: "password",
+      firstName: "John",
+      lastName: "Smith",
+      profilePic: "http://someprofilepic.com"
+    })
+  })
+
   it("can list all users", async () => {
     const users = await User.find();
     expect(users).toEqual([]);
