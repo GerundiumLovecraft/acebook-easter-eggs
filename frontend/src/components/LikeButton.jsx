@@ -4,9 +4,15 @@ import { jwtDecode } from "jwt-decode";
 
 function LikeButton({ postId, likeCount, likedBy, token }) {
   const [count, setCount] = useState(likeCount);
-  const decoded = jwtDecode(token);
-  const currentUserId = decoded.sub;
-  const [liked, setLiked] = useState(likedBy.includes(currentUserId));
+
+  let currentUserId = null
+  try {
+    const decoded = token ? jwtDecode(token): null;
+    currentUserId = decoded ? decoded.sub: null
+  } catch (e) {
+    currentUserId = null;
+  }
+  const [liked, setLiked] = useState(likedBy && currentUserId ? likedBy.includes(currentUserId) : false);
 
   async function handleLike() {
     try {
