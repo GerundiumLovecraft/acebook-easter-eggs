@@ -26,7 +26,6 @@ export function ProfilePage() {
                 setProfile(profileData);
                 setCurrentUser(currentUserData);
                 setLoading(false);
-                localStorage.setItem("token");
             })
             .catch((error) => {
                 console.log(error);
@@ -44,7 +43,7 @@ export function ProfilePage() {
                 <>
                     <h1>{profile.profile.firstName} {profile.profile.lastName}</h1>
                     <p>Email: {profile.email}</p>
-                    <p>Profile pic: {profile.profile.ProfilePic}</p>
+                    <p>Profile pic: {profile.profile.profilePic}</p>
                     <p>Created At: {profile.createdAt}</p>
                     <p>Last Updated: {profile.updatedAt}</p>
                     {isOwnProfile && <button>Edit Profile</button>}
