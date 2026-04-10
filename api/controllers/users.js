@@ -21,7 +21,7 @@ const { email, password, firstName, lastName } = req.body;
 
 async function getCurrentUser(req, res) {
   try {
-    const user = await User.findById(req.user_id).select("-password");
+    const user = await User.findById(req.user_id);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -54,6 +54,22 @@ async function getProfile(req, res) {
   }
 };
 
+async function updateCurrentUser(req, res) {
+  const user = await User.findById(req.user_id);
+  const { email, firstName, lastName, profilePic } = req.body
+
+  if (!user) {
+      return res.status(404).json({ message: "User not found" });
+  }
+
+    if (email !== undefined) updates.email = email;
+    if (firstName !== undefined) updates.firstName = firstName;
+    if (lastName !== undefined) updates.lastName = lastName;
+    if (profilePic !== undefined) updates.profilePic = profilePic;
+
+
+}
+
 async function searchUser(req, res) {
   try {
     // Turn search string into a regex object
@@ -85,6 +101,7 @@ const UsersController = {
   create: create,
   getCurrentUser: getCurrentUser,
   getProfile: getProfile,
+  updateCurrentUser: updateCurrentUser,
   searchUser: searchUser,
 };
 
