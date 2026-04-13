@@ -297,8 +297,7 @@ describe("/posts", () => {
       const post = new Post({ message: "You are not logged in" });
       await post.save();
 
-      const response = await request(app)
-        .post(`/posts/${post._id}/like`);
+      const response = await request(app).post(`/posts/${post._id}/like`);
 
       expect(response.status).toEqual(401);
     });
@@ -307,11 +306,10 @@ describe("/posts", () => {
       const post = new Post({ message: "You need to log in first" });
       await post.save();
 
-      const response = await request(app)
-        .post(`/posts/${post._id}/like`);
-      
+      const response = await request(app).post(`/posts/${post._id}/like`);
+
       const updatedPost = await Post.findById(post._id);
       expect(updatedPost.likeCount).toEqual(0);
-    })
+    });
   });
 });
