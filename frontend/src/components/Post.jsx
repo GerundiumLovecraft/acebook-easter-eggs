@@ -2,6 +2,7 @@ import "./Post.css";
 import LikeButton from "./LikeButton";
 import { useState, useEffect } from "react";
 import { getComments, addComment } from "../services/comments";
+import { jwtDecode } from "jwt-decode";
 
 function Post({ post, token }) {
   const {
@@ -16,6 +17,13 @@ const [comments, setComments] = useState([]);
 const [newComment, setNewComment] = useState("");
 
 const token = localStorage.getItem("token");
+
+let currentUserId = null;
+
+if (token) {
+  const decoded = jwtDecode(token);
+  currentUserId = decoded.user_id || decoded.id || decoded._id;
+}
 
 useEffect(() => {
   if (!showComments) return;
@@ -94,9 +102,11 @@ return (
           {comments.map((c, i) => (
             <div key={i} className="comment">
               <strong>
-                {c.userId?.profile
-                  ? `${c.userId.profile.firstName || ""} ${c.userId.profile.lastName || ""}`
-                  : "You"}
+                {c.userId?._id?.toString() === currentUserId?.toString()
+                ? "You"
+                : c.userId?.profile?.firstName
+                ? `${c.userId.profile.firstName} ${c.userId.profile.lastName || ""}`
+                : "User"}
               </strong>
               <span>{c.content}</span>
             </div>
