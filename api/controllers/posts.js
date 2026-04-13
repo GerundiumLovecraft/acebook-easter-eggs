@@ -71,7 +71,7 @@ async function getComments(req, res){
   }
 };
 
-async function addComment(req, res){
+async function addComment(req, res) {
   try {
     const comment = new Comment({
       postId: req.params.id,
@@ -85,16 +85,16 @@ async function addComment(req, res){
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-};
+}
 
 const PostsController = {
   getAllPosts: getAllPosts,
   createPost: createPost,
+  likePost: likePost,
   getComments: getComments,
   addComment: addComment,
   likePost: likePost,
   getComments: getComments,
   addComment: addComment,
 };
-
 module.exports = PostsController;
