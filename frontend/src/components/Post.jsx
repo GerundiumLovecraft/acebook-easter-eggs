@@ -1,9 +1,10 @@
 import "./Post.css";
+import LikeButton from "./LikeButton";
 import { useState, useEffect } from "react";
 import { getComments, addComment } from "../services/comments";
 import { jwtDecode } from "jwt-decode";
 
-function Post({ post }) {
+function Post({ post, token }) {
   const {
     message,
     image,
@@ -14,8 +15,6 @@ function Post({ post }) {
 const [showComments, setShowComments] = useState(false);
 const [comments, setComments] = useState([]);
 const [newComment, setNewComment] = useState("");
-
-const token = localStorage.getItem("token");
 
 let currentUserId = null;
 
@@ -81,7 +80,12 @@ return (
 
       {/* ACTIONS */}
       <div className="post-actions">
-        <button>❤️ Like</button>
+        <LikeButton
+          postId={post._id}
+          likeCount={post.likeCount}
+          likedBy={post.likedBy}
+          token={token}
+        />
 
         <button onClick={() => setShowComments(!showComments)}>
           💬 Comment

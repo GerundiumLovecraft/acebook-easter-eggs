@@ -18,11 +18,12 @@ function createToken(userId) {
       // Set the JWT token to expire in 10 minutes
       exp: Math.floor(Date.now() / 1000) + 10 * 60,
     },
-    secret
+    secret,
   );
 }
 
 let token;
+let userId;
 describe("/posts", () => {
   beforeAll(async () => {
     const user = new User({
@@ -32,6 +33,7 @@ describe("/posts", () => {
     await user.save();
     await Post.deleteMany({});
     token = createToken(user.id);
+    userId = user.id;
   });
 
   afterEach(async () => {
@@ -185,6 +187,92 @@ describe("/posts", () => {
       const response = await request(app).get("/posts");
 
       expect(response.body.token).toEqual(undefined);
+    });
+  });
+
+  describe("POST /posts/:id/like, when token is present", () => {
+    test("the response code is 200", async () => {
+      const post = new Post({ message: "like this post" });
+      await post.save();
+
+      const response = await request(app)
+        .post(`/posts/${post._id}/like`)
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.status).toEqual(200);
+    });
+
+    test("likeCount goes up by 1", async () => {
+      const post = new Post({ message: "is this like button working?" });
+      await post.save();
+
+      const response = await request(app)
+        .post(`/posts/${post._id}/like`)
+        .set("Authorization", `Bearer ${token}`);
+
+      const updatedPost = await Post.findById(post._id);
+
+      expect(updatedPost.likeCount).toEqual(1);
+    });
+
+    test("users id is added to likedBy", async () => {
+      const post = new Post({ message: "who liked this post?" });
+      await post.save();
+
+      const response = await request(app)
+        .post(`/posts/${post._id}/like`)
+        .set("Authorization", `Bearer ${token}`);
+
+      const updatedPost = await Post.findById(post._id);
+
+      expect(updatedPost.likedBy).toContain(userId);
+    });
+
+    test("returns a new token", async () => {
+      const post = new Post({ message: "I got a new token!" });
+      await post.save();
+
+      const response = await request(app)
+        .post(`/posts/${post._id}/like`)
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.body.token).not.toEqual(undefined);
+    });
+
+    test("unable to like a post more than once", async () => {
+      const post = new Post({ message: "You already liked me" });
+      await post.save();
+
+      await request(app)
+        .post(`/posts/${post._id}/like`)
+        .set("Authorization", `Bearer ${token}`);
+
+      const response = await request(app)
+        .post(`/posts/${post._id}/like`)
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.status).toEqual(400);
+    });
+  });
+
+  describe("POST /posts/:id/like, when token is missing", () => {
+    test("the response code is 401", async () => {
+      const post = new Post({ message: "You are not logged in" });
+      await post.save();
+
+      const response = await request(app).post(`/posts/${post._id}/like`);
+
+      expect(response.status).toEqual(401);
+    });
+
+    test("likeCount stays at 0 when not logged in", async () => {
+      const post = new Post({ message: "You need to log in first" });
+      await post.save();
+
+      const response = await request(app).post(`/posts/${post._id}/like`);
+
+      const updatedPost = await Post.findById(post._id);
+      expect(updatedPost.likeCount).toEqual(0);
     });
   });
 });
