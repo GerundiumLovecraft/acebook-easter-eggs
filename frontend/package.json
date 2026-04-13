@@ -12,7 +12,10 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+<<<<<<< HEAD
     "jwt-decode": "^4.0.0",
+=======
+>>>>>>> be3ccc9 (Comment functionality added)
     "lucide-react": "^1.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
