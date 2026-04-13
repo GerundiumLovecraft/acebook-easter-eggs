@@ -17,24 +17,38 @@ async function createPost(req, res) {
   res.status(201).json({ message: "Post created", token: newToken });
 }
 
-async function getComments(req, res){
+async function likePost(req, res) {
+  const post = await Post.findById(req.params.id);
+
+  if (post.likedBy.includes(req.user_id)) {
+    return res.status(400).json({ message: "Already liked" });
+  }
+
+  post.likeCount = post.likeCount + 1;
+  post.likedBy.push(req.user_id);
+  await post.save();
+
+  const newToken = generateToken(req.user_id);
+  res.status(200).json({ message: "Post liked", token: newToken });
+}
+async function getComments(req, res) {
   try {
     const comments = await Comment.find({
-      postId: req.params.id
+      postId: req.params.id,
     }).populate("userId", "profile");
 
     res.json({ comments });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-};
+}
 
-async function addComment(req, res){
+async function addComment(req, res) {
   try {
     const comment = new Comment({
       postId: req.params.id,
       userId: req.user_id,
-      content: req.body.content
+      content: req.body.content,
     });
 
     await comment.save();
@@ -43,14 +57,14 @@ async function addComment(req, res){
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-};
+}
 
 const PostsController = {
   getAllPosts: getAllPosts,
   createPost: createPost,
+  likePost: likePost,
   getComments: getComments,
   addComment: addComment,
 };
-
 
 module.exports = PostsController;
