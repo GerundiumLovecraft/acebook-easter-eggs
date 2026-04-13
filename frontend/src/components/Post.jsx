@@ -53,14 +53,14 @@ return (
       {/* HEADER */}
       <div className="post-header">
         <img
-          src={user.profilePic || "avatar.jpg"}
+          src={user.profile.profilePic || "avatar.jpg"}
           alt="profile"
           className="post-avatar"
         />
 
         <div>
           <p className="post-username">
-            {user.name || "Unknown User"}
+            {user.profile.firstName || "Unknown User"}
           </p>
           <p className="post-date">
             {createdAt ? new Date(createdAt).toLocaleString() : ""}
