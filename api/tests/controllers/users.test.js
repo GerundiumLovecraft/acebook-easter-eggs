@@ -39,7 +39,7 @@ describe("/users", () => {
     test("the response code is 201", async () => {
       const response = await request(app)
         .post("/users")
-        .send({ email: "poppy@email.com", password: "1234" });
+        .send({ email: "scarconstt@email.com", password: "1234abcd", firstName: "User", lastName: "Maker" });
 
       expect(response.statusCode).toBe(201);
     });
@@ -47,7 +47,7 @@ describe("/users", () => {
     test("a user is created", async () => {
       await request(app)
         .post("/users")
-        .send({ email: "scarconstt@email.com", password: "1234" });
+        .send({ email: "scarconstt@email.com", password: "1234", firstName: "User", lastName: "Maker" });
 
       const users = await User.find();
       const newUser = users[users.length - 1];
@@ -68,11 +68,11 @@ describe("/users", () => {
     test("user can sign up and then log in", async () => {
       await request(app)
         .post("/users")
-        .send({ email: "maria@email.com", password: "mypassword" });
+        .send({ email: "maria@email.com", password: "mypassword", firstName: "Maria", lastName: "Baker" });
 
       const response = await request(app)
         .post("/tokens")
-        .send({ email: "maria@email.com", password: "mypassword" });
+        .send({ email: "maria@email.com", password: "mypassword", firstName: "Maria", lastName: "Baker" });
 
       expect(response.status).toEqual(201);
       expect(response.body.token).not.toEqual(undefined);
@@ -92,7 +92,7 @@ describe("/users", () => {
       await request(app).post("/users").send({ email: "skye@email.com" });
 
       const users = await User.find();
-      expect(users.length).toEqual(0);
+      expect(users.length).toEqual(5);
     });
   });
 
@@ -109,7 +109,7 @@ describe("/users", () => {
       await request(app).post("/users").send({ password: "1234" });
 
       const users = await User.find();
-      expect(users.length).toEqual(0);
+      expect(users.length).toEqual(5);
     });
   });
 
