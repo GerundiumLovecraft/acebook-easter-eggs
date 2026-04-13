@@ -12,9 +12,11 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "jwt-decode": "^4.0.0",
+    "lucide-react": "^1.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.14.2",
+    "react-router-dom": "^6.14.2"
   },
   "devDependencies": {
     "@testing-library/react": "^14.0.0",
@@ -22,12 +24,15 @@
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@vitejs/plugin-react-swc": "^3.3.2",
+    "autoprefixer": "^10.4.27",
     "eslint": "^8.45.0",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
     "eslint-plugin-vitest": "^0.3.26",
     "jsdom": "^22.1.0",
+    "postcss": "^8.5.9",
+    "tailwindcss": "^4.2.2",
     "vite": "^4.4.5",
     "vitest": "^0.34.1",
     "vitest-fetch-mock": "^0.2.2"
