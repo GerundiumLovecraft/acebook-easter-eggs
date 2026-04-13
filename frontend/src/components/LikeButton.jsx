@@ -26,7 +26,7 @@ function LikeButton({ postId, likeCount, likedBy, token }) {
 
   async function handleUnlike() {
     try {
-      await likePost(postId, token);
+      await unlikePost(postId, token);
       setCount(count - 1);
       setLiked(false);
     } catch (err) {
