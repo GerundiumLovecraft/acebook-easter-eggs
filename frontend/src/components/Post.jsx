@@ -1,6 +1,7 @@
 import "./Post.css";
+import LikeButton from "./LikeButton";
 
-function Post({ post }) {
+function Post({ post, token }) {
   const {
     message,
     image,
@@ -43,7 +44,12 @@ function Post({ post }) {
 
       {/* ACTIONS */}
       <div className="post-actions">
-        <button>❤️ Like</button>
+        <LikeButton
+          postId={post._id}
+          likeCount={post.likeCount}
+          likedBy={post.likedBy}
+          token={token}
+        />
         <button>💬 Comment</button>
       </div>
     </div>
