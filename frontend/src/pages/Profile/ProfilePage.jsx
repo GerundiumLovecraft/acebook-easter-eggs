@@ -118,14 +118,17 @@ export function ProfilePage() {
         <button onClick={handleCancelClick}>Cancel</button>
     </>
     ) : (
-        isOwnProfile && <button onClick={handleEditClick}>Edit Profile</button>
-    );
+        isOwnProfile ? <> 
+        <button onClick={handleEditClick}>Edit Profile</button> 
+        <button>Create Post</button> </> 
+        : <button>Add friend</button>
+    )
 
     return (
         <div>
             {nameSection}
+            <img src={profilePic}/>
             {emailSection}
-            <p>Profile pic: {profilePic}</p>
             <p>Joined: {formatCreatedAt(createdAt)}</p>
             <p>Active: {formatLastUpdated(updatedAt)}</p>
             {actionButtons}
