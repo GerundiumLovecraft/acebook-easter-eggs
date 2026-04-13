@@ -126,8 +126,8 @@ export function ProfilePage() {
 
     return (
         <div>
-            {nameSection}
             <img src={profilePic}/>
+            {nameSection}
             {emailSection}
             <p>Joined: {formatCreatedAt(createdAt)}</p>
             <p>Active: {formatLastUpdated(updatedAt)}</p>
