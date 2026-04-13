@@ -1,5 +1,7 @@
 const Post = require("../models/post");
+const Comment = require("../models/comment");
 const { generateToken } = require("../lib/token");
+const mongoose = require("mongoose");
 
 async function getAllPosts(req, res) {
   const posts = await Post.find();
@@ -25,16 +27,44 @@ async function likePost(req, res) {
   post.likeCount = post.likeCount + 1;
   post.likedBy.push(req.user_id);
   await post.save();
-  
+
   const newToken = generateToken(req.user_id);
   res.status(200).json({ message: "Post liked", token: newToken });
+}
+async function getComments(req, res) {
+  try {
+    const comments = await Comment.find({
+      postId: req.params.id,
+    }).populate("userId", "profile");
+
+    res.json({ comments });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+async function addComment(req, res) {
+  try {
+    const comment = new Comment({
+      postId: req.params.id,
+      userId: req.user_id,
+      content: req.body.content,
+    });
+
+    await comment.save();
+
+    res.status(201).json({ message: "Comment added" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 }
 
 const PostsController = {
   getAllPosts: getAllPosts,
   createPost: createPost,
   likePost: likePost,
+  getComments: getComments,
+  addComment: addComment,
 };
-
 
 module.exports = PostsController;
