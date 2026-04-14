@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react";
 import { getUser, getCurrentUser, updateCurrentUser } from "../../services/users";
 import { formatCreatedAt, formatLastUpdated } from "../../utils/dates";
+import { getPostsByUserId } from "../../services/posts";
 
 
 export function ProfilePage() {
@@ -16,6 +17,7 @@ export function ProfilePage() {
     const [saveError, setSaveError] = useState("")
     const [isSaving, setIsSaving] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
+    const [posts, setPosts] = useState(null)
     const {id} = useParams()
     const navigate = useNavigate();
 
@@ -29,11 +31,13 @@ export function ProfilePage() {
 
         Promise.all([
             getUser(id, token),
-            getCurrentUser(token)
+            getCurrentUser(token),
+            getPostsByUserId(id, token)
             ])
-            .then(([profileData, currentUserData]) => {
+            .then(([profileData, currentUserData, postsData]) => {
                 setProfile(profileData);
                 setCurrentUser(currentUserData);
+                setPosts(postsData)
                 setLoading(false);
             })
             .catch((error) => {
@@ -42,7 +46,24 @@ export function ProfilePage() {
             });
     }, [id, navigate]);
 
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        Promise.all([
+            getPostsByUserId(id, token)
+            ])
+            .then(([postsData]) => {
+                setPosts(postsData)
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.log(error);
+                setLoading(false);
+            });
+    },[id])
+
     const isOwnProfile = currentUser?._id === profile?._id;
+
+    console.log(posts, '<---posts')
 
     function handleEditClick() {
         setFormData({
