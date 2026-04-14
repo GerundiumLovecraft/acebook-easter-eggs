@@ -42,3 +42,24 @@ export async function friendRequestExists(token, UID) {
 
     return response.json();
 };
+
+export async function sendFriendRequest(token, UID) {
+    const response = await fetch(`${BACKEND_URL}/friend_requests`, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ toUID: UID })
+    })
+
+    const body = await response.json();
+
+    if(response.status === 400) {
+        throw new alert(body.message);
+    } else if (!response.ok) {
+        throw new alert("Failed to send friend request");
+    };
+
+    return body
+}
