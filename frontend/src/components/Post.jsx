@@ -26,7 +26,7 @@ function Post({ post, token }) {
     currentUserId = decoded.sub
   }
 
-  const ownerOfPost = currentUserId?.toString() === post.user._id?.toString();
+  const ownerOfPost = currentUserId?.toString() === post.user?._id?.toString();
 
   useEffect(() => {
     if (!showComments) return;
