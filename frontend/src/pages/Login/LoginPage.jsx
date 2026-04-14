@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import { login } from "../../services/authentication";
 
@@ -31,20 +31,20 @@ export function LoginPage() {
   }
 
   return (
-    <>
+    <div className="login-container">
       <h1>Welcome back!</h1>
       <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="email">Email:</label>
-        <input className="FormField"
+      <form className="login-form" onSubmit={handleSubmit}>
+        <label className="login-label" htmlFor="email">Email:</label>
+        <input className="login-field"
           id="email"
           type="text"
           value={email}
           onChange={handleEmailChange}
         />
         <br />
-        <label htmlFor="password">Password:</label>
-        <input className="FormField"
+        <label className="login-label" htmlFor="password">Password:</label>
+        <input className="login-field"
           id="password"
           type="password"
           value={password}
@@ -53,6 +53,7 @@ export function LoginPage() {
         <br />
         <input role="submit-button" id="submit" type="submit" value="Submit" />
       </form>
-    </>
+      <Link to="/signup">New to Acebook? Sign up here!</Link>
+    </div>
   );
 }

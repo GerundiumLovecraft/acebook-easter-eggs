@@ -6,9 +6,34 @@ const User = require("../../models/user");
 require("../mongodb_helper");
 
 describe("/users", () => {
-  beforeEach(async () => {
-    await User.deleteMany({});
-  });
+
+    // this is a helper to stop having to create and login a user for every test
+  async function createUserAndLogin(overrides = {}) {
+    const userData = {
+      email: "bob@email.com",
+      password: "mypassword",
+      firstName: "Bob",
+      lastName: "Smith",
+      ...overrides,
+    };
+
+    await request(app).post("/users").send(userData);
+
+    const loginResponse = await request(app)
+      .post("/tokens")
+      .send({
+        email: userData.email,
+        password: userData.password,
+      });
+
+    const user = await User.findOne({ email: userData.email });
+
+    return {
+      user,
+      token: loginResponse.body.token,
+      userData,
+    };
+  }
 
     // this is a helper to stop having to create and login a user for every test
   async function createUserAndLogin(overrides = {}) {
@@ -43,7 +68,7 @@ describe("/users", () => {
     test("the response code is 201", async () => {
       const response = await request(app)
         .post("/users")
-        .send({ email: "poppy@email.com", password: "1234" });
+        .send({ email: "scarconstt@email.com", password: "1234abcd", firstName: "User", lastName: "Maker" });
 
       expect(response.statusCode).toBe(201);
     });
@@ -51,7 +76,7 @@ describe("/users", () => {
     test("a user is created", async () => {
       await request(app)
         .post("/users")
-        .send({ email: "scarconstt@email.com", password: "1234" });
+        .send({ email: "scarconstt@email.com", password: "1234", firstName: "User", lastName: "Maker" });
 
       const users = await User.find();
       const newUser = users[users.length - 1];
@@ -72,11 +97,11 @@ describe("/users", () => {
     test("user can sign up and then log in", async () => {
       await request(app)
         .post("/users")
-        .send({ email: "maria@email.com", password: "mypassword" });
+        .send({ email: "maria@email.com", password: "mypassword", firstName: "Maria", lastName: "Baker" });
 
       const response = await request(app)
         .post("/tokens")
-        .send({ email: "maria@email.com", password: "mypassword" });
+        .send({ email: "maria@email.com", password: "mypassword", firstName: "Maria", lastName: "Baker" });
 
       expect(response.status).toEqual(201);
       expect(response.body.token).not.toEqual(undefined);
@@ -96,7 +121,7 @@ describe("/users", () => {
       await request(app).post("/users").send({ email: "skye@email.com" });
 
       const users = await User.find();
-      expect(users.length).toEqual(0);
+      expect(users.length).toEqual(5);
     });
   });
 
@@ -113,7 +138,7 @@ describe("/users", () => {
       await request(app).post("/users").send({ password: "1234" });
 
       const users = await User.find();
-      expect(users.length).toEqual(0);
+      expect(users.length).toEqual(5);
     });
   });
 
@@ -194,6 +219,27 @@ describe("/users", () => {
 
       expect(response.statusCode).toBe(400);
       expect(response.body.message).toEqual("User not found");
+    });
+  });
+
+  describe("GET /users/me", () => {
+    test("returns the current user without the password", async () => {
+      const { token, userData } = await createUserAndLogin({
+        email: "currentuser@email.com",
+        password: "1234",
+        firstName: "Current",
+        lastName: "User",
+      });
+
+      const response = await request(app)
+        .get("/users/me")
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body.email).toEqual(userData.email);
+      expect(response.body.profile.firstName).toEqual("Current");
+      expect(response.body.profile.lastName).toEqual("User");
+      expect(response.body.password).toBeUndefined();
     });
   });
 });

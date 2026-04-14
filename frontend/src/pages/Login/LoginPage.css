@@ -1,19 +1,27 @@
-h1 {
-    padding-top: 50%;
-    font-family: Verdana;
-    font-size: 3em;
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100%;
 }
 
-form {
+.login-form {
     width: 350px;
-    margin: auto;
     line-height: 2em;
 }
 
-label {
-    float: left;
+.login-form::after {
+    content: "";
+    display: table;
+    clear: both;
 }
 
-.FormField {
+.login-field {
     float: right;
+}
+
+.login-label {
+    float: left;
 }

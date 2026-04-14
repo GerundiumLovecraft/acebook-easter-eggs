@@ -13,9 +13,7 @@ function createToken(userId) {
   return JWT.sign(
     {
       sub: userId,
-      // Backdate this token of 5 minutes
       iat: Math.floor(Date.now() / 1000) - 5 * 60,
-      // Set the JWT token to expire in 10 minutes
       exp: Math.floor(Date.now() / 1000) + 10 * 60,
     },
     secret,
@@ -24,11 +22,16 @@ function createToken(userId) {
 
 let token;
 let userId;
+
 describe("/posts", () => {
-  beforeAll(async () => {
+  beforeEach(async () => {
     const user = new User({
       email: "post-test@test.com",
       password: "12345678",
+      profile: {
+        firstName: "User",
+        lastName: "Baker",
+      }
     });
     await user.save();
     await Post.deleteMany({});
@@ -37,7 +40,6 @@ describe("/posts", () => {
   });
 
   afterEach(async () => {
-    await User.deleteMany({});
     await Post.deleteMany({});
   });
 
@@ -49,15 +51,20 @@ describe("/posts", () => {
         .send({ message: "Hello World!" });
       expect(response.status).toEqual(201);
     });
+
     test("creates a post with an image", async () => {
       await request(app)
         .post("/posts")
         .set("Authorization", `Bearer ${token}`)
-        .send({ message: "Hello World!", image: "https://example.com/image.jpg" });
+        .send({
+          message: "Hello World!",
+          image: "https://example.com/image.jpg",
+        });
 
       const posts = await Post.find();
       expect(posts[0].image).toEqual("https://example.com/image.jpg");
     });
+
     test("saves the user to the post", async () => {
       await request(app)
         .post("/posts")
@@ -67,7 +74,6 @@ describe("/posts", () => {
       const posts = await Post.find();
       expect(posts[0].user).toBeDefined();
     });
-
 
     test("creates a new post", async () => {
       await request(app)
@@ -91,7 +97,6 @@ describe("/posts", () => {
       const newTokenDecoded = JWT.decode(newToken, process.env.JWT_SECRET);
       const oldTokenDecoded = JWT.decode(token, process.env.JWT_SECRET);
 
-      // iat stands for issued at
       expect(newTokenDecoded.iat > oldTokenDecoded.iat).toEqual(true);
     });
   });
@@ -136,10 +141,9 @@ describe("/posts", () => {
 
       expect(response.status).toEqual(200);
     });
+
     test("returns the user with each post", async () => {
-      const user = new User({ email: "post-test@test.com", password: "12345678" });
-      await user.save();
-      const userToken = createToken(user.id);
+      const userToken = createToken(userId);
 
       await request(app)
         .post("/posts")
@@ -166,11 +170,8 @@ describe("/posts", () => {
         .set("Authorization", `Bearer ${token}`);
 
       const posts = response.body.posts;
-      const firstPost = posts[0];
-      const secondPost = posts[1];
-
-      expect(firstPost.message).toEqual("howdy!");
-      expect(secondPost.message).toEqual("hola!");
+      expect(posts[0].message).toEqual("howdy!");
+      expect(posts[1].message).toEqual("hola!");
     });
 
     test("returns a new token", async () => {
@@ -187,7 +188,6 @@ describe("/posts", () => {
       const newTokenDecoded = JWT.decode(newToken, process.env.JWT_SECRET);
       const oldTokenDecoded = JWT.decode(token, process.env.JWT_SECRET);
 
-      // iat stands for issued at
       expect(newTokenDecoded.iat > oldTokenDecoded.iat).toEqual(true);
     });
   });
@@ -243,12 +243,11 @@ describe("/posts", () => {
       const post = new Post({ message: "is this like button working?" });
       await post.save();
 
-      const response = await request(app)
+      await request(app)
         .post(`/posts/${post._id}/like`)
         .set("Authorization", `Bearer ${token}`);
 
       const updatedPost = await Post.findById(post._id);
-
       expect(updatedPost.likeCount).toEqual(1);
     });
 
@@ -256,12 +255,11 @@ describe("/posts", () => {
       const post = new Post({ message: "who liked this post?" });
       await post.save();
 
-      const response = await request(app)
+      await request(app)
         .post(`/posts/${post._id}/like`)
         .set("Authorization", `Bearer ${token}`);
 
       const updatedPost = await Post.findById(post._id);
-
       expect(updatedPost.likedBy).toContain(userId);
     });
 
@@ -310,6 +308,106 @@ describe("/posts", () => {
 
       const updatedPost = await Post.findById(post._id);
       expect(updatedPost.likeCount).toEqual(0);
+    });
+  });
+
+  describe("DELETE /posts/:id/like, when token is present", () => {
+    test("the response code is 200", async () => {
+      const post = new Post({ message: "Unlike this post" });
+      await post.save();
+
+      await request(app)
+        .post(`/posts/${post._id}/like`)
+        .set("Authorization", `Bearer ${token}`);
+
+      const response = await request(app)
+        .delete(`/posts/${post._id}/like`)
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.status).toEqual(200);
+    });
+
+    test("likeCount goes down by 1", async () => {
+      const post = new Post({ message: "My likes have gone down" });
+      await post.save();
+
+      await request(app)
+        .post(`/posts/${post._id}/like`)
+        .set("Authorization", `Bearer ${token}`);
+
+      await request(app)
+        .delete(`/posts/${post._id}/like`)
+        .set("Authorization", `Bearer ${token}`);
+
+      const updatedPost = await Post.findById(post._id);
+      expect(updatedPost.likeCount).toEqual(0);
+    });
+
+    test("userId is removed from likedBy", async () => {
+      const post = new Post({ message: "Who unliked my post?" });
+      await post.save();
+
+      await request(app)
+        .post(`/posts/${post._id}/like`)
+        .set("Authorization", `Bearer ${token}`);
+
+      await request(app)
+        .delete(`/posts/${post._id}/like`)
+        .set("Authorization", `Bearer ${token}`);
+
+      const updatedPost = await Post.findById(post._id);
+      expect(updatedPost.likedBy).not.toContain(userId);
+    });
+
+    test("returns a new token", async () => {
+      const post = new Post({ message: "I got a new token" });
+      await post.save();
+
+      await request(app)
+        .post(`/posts/${post._id}/like`)
+        .set("Authorization", `Bearer ${token}`);
+
+      const response = await request(app)
+        .delete(`/posts/${post._id}/like`)
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.body.token).not.toEqual(undefined);
+    });
+
+    test("unable to unlike a post that has not been liked", async () => {
+      const post = new Post({ message: "You need to like me to unlike me" });
+      await post.save();
+
+      const response = await request(app)
+        .delete(`/posts/${post._id}/like`)
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.status).toEqual(400);
+    });
+  });
+
+  describe("DELETE /posts/:id/like, when token is missing", () => {
+    test("the response code is 401", async () => {
+      const post = new Post({ message: "You need to log in to unlike a post" });
+      await post.save();
+
+      const response = await request(app).delete(`/posts/${post._id}/like`);
+
+      expect(response.status).toEqual(401);
+    });
+
+    test("likeCount stays at 1 when not logged in", async () => {
+      const post = new Post({ message: "You need to log in first" });
+      await post.save();
+
+      await request(app)
+        .post(`/posts/${post._id}/like`)
+        .set("Authorization", `Bearer ${token}`);
+
+      await request(app).delete(`/posts/${post._id}/like`);
+
+      const updatedPost = await Post.findById(post._id);
+      expect(updatedPost.likeCount).toEqual(1);
     });
   });
 });
