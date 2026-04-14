@@ -5,11 +5,15 @@ const User = require("../../models/user");
 const bcrypt = require("bcrypt");
 
 describe("/tokens", () => {
-  beforeAll(async () => {
+  beforeEach(async () => {
     const hashedPassword = await bcrypt.hash("12345678", 10);
     const user = new User({
       email: "auth-test@test.com",
       password: hashedPassword,
+      profile: {
+        firstName: "Maker",
+        lastName: "Baker",
+      }
     });
 
     // We need to use `await` so that the "beforeAll" setup function waits for
@@ -17,10 +21,6 @@ describe("/tokens", () => {
     // Otherwise, the tests belowc ould run without the user actyakkt being
     // saved, causing tests to fail inconsistently.
     await user.save();
-  });
-
-  afterAll(async () => {
-    await User.deleteMany({});
   });
 
   test("returns a token when credentials are valid", async () => {

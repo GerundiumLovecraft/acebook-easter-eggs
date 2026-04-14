@@ -24,10 +24,14 @@ let token;
 let userId;
 
 describe("/posts", () => {
-  beforeAll(async () => {
+  beforeEach(async () => {
     const user = new User({
       email: "post-test@test.com",
       password: "12345678",
+      profile: {
+        firstName: "User",
+        lastName: "Baker",
+      }
     });
     await user.save();
     await Post.deleteMany({});
@@ -36,7 +40,6 @@ describe("/posts", () => {
   });
 
   afterEach(async () => {
-    await User.deleteMany({});
     await Post.deleteMany({});
   });
 
@@ -140,12 +143,7 @@ describe("/posts", () => {
     });
 
     test("returns the user with each post", async () => {
-      const user = new User({
-        email: "post-test@test.com",
-        password: "12345678",
-      });
-      await user.save();
-      const userToken = createToken(user.id);
+      const userToken = createToken(userId);
 
       await request(app)
         .post("/posts")

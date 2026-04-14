@@ -6,6 +6,7 @@ import { LoginPage } from "./pages/Login/LoginPage";
 import { SignupPage } from "./pages/Signup/SignupPage";
 import { FeedPage } from "./pages/Feed/FeedPage";
 import { ProfilePage } from "./pages/Profile/ProfilePage"
+import { FriendsPage } from "./pages/Friends/FriendsPage";
 import ProtectedRoute from "./layouts/ProtectedRoute";
 import MainLayout from "./layouts/MainLayout";
 
@@ -22,6 +23,7 @@ const router = createBrowserRouter([
       { index: true, element: <Navigate to="/posts" replace /> },
       { path: "posts", element: <FeedPage/> },
       { path: "users/:id", element: <ProfilePage/> },
+      { path: "friends", element: <FriendsPage />},
     ]
   },
   {

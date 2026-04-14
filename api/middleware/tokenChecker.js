@@ -21,7 +21,6 @@ function tokenChecker(req, res, next) {
     req.user_id = user_id;
     next();
   } catch (err) {
-    console.log(err);
     res.status(401).json({ message: "auth error" });
   }
 }
