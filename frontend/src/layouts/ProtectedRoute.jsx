@@ -20,7 +20,7 @@ export const ProtectedRoute = ({children}) => {
     }
   } catch (error) {
     localStorage.removeItem("token");
-    <Navigate to="/login" replace/>
+    return <Navigate to="/login" replace/>
   }
 };
 

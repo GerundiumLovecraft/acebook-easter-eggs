@@ -86,7 +86,7 @@ return (
           likedBy={post.likedBy}
           token={token}
         />
-
+        
         <button onClick={() => setShowComments(!showComments)}>
           💬 Comment
         </button>

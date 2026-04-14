@@ -4,7 +4,7 @@
   padding: 16px;
   margin: 16px auto;
   max-width: 600px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* HEADER */
@@ -70,7 +70,6 @@
   color: initial;
   filter: none;
 }
-
 .comments-section {
   margin-top: 12px;
   padding-top: 10px;
@@ -86,7 +85,7 @@
   border-radius: 12px;
   margin-bottom: 8px;
   font-size: 14px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
   max-width: 85%;
 }
 
@@ -131,15 +130,6 @@
   font-size: 14px;
 }
 
-
 .comment-input button:hover {
   background: #166fe5;
-}
-
-.post-actions button:disabled {
-  opacity: 1;
-  cursor: default;
-  -webkit-text-fill-color: initial;
-  color: initial;
-  filter: none;
 }

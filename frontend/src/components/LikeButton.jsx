@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { likePost } from "../services/posts";
+import { likePost, unlikePost } from "../services/posts";
 import { jwtDecode } from "jwt-decode";
 
 function LikeButton({ postId, likeCount, likedBy, token }) {
@@ -24,9 +24,19 @@ function LikeButton({ postId, likeCount, likedBy, token }) {
     }
   }
 
+  async function handleUnlike() {
+    try {
+      await unlikePost(postId, token);
+      setCount(count - 1);
+      setLiked(false);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   return (
     <div>
-      <button onClick={handleLike} disabled={liked}>
+      <button onClick={liked ? handleUnlike : handleLike}>
         {liked ? "❤️" : "🩶"} {count}
       </button>
     </div>
