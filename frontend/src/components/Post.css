@@ -131,6 +131,15 @@
   font-size: 14px;
 }
 
+
 .comment-input button:hover {
   background: #166fe5;
+}
+
+.post-actions button:disabled {
+  opacity: 1;
+  cursor: default;
+  -webkit-text-fill-color: initial;
+  color: initial;
+  filter: none;
 }

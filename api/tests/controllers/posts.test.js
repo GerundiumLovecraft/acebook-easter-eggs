@@ -49,6 +49,25 @@ describe("/posts", () => {
         .send({ message: "Hello World!" });
       expect(response.status).toEqual(201);
     });
+    test("creates a post with an image", async () => {
+      await request(app)
+        .post("/posts")
+        .set("Authorization", `Bearer ${token}`)
+        .send({ message: "Hello World!", image: "https://example.com/image.jpg" });
+
+      const posts = await Post.find();
+      expect(posts[0].image).toEqual("https://example.com/image.jpg");
+    });
+    test("saves the user to the post", async () => {
+      await request(app)
+        .post("/posts")
+        .set("Authorization", `Bearer ${token}`)
+        .send({ message: "Hello World!" });
+
+      const posts = await Post.find();
+      expect(posts[0].user).toBeDefined();
+    });
+
 
     test("creates a new post", async () => {
       await request(app)
@@ -116,6 +135,24 @@ describe("/posts", () => {
         .set("Authorization", `Bearer ${token}`);
 
       expect(response.status).toEqual(200);
+    });
+    test("returns the user with each post", async () => {
+      const user = new User({ email: "post-test@test.com", password: "12345678" });
+      await user.save();
+      const userToken = createToken(user.id);
+
+      await request(app)
+        .post("/posts")
+        .set("Authorization", `Bearer ${userToken}`)
+        .send({ message: "Hello World!" });
+
+      const response = await request(app)
+        .get("/posts")
+        .set("Authorization", `Bearer ${userToken}`);
+
+      const posts = response.body.posts;
+      expect(posts[0].user).toBeDefined();
+      expect(posts[0].user.email).toEqual("post-test@test.com");
     });
 
     test("returns every post in the collection", async () => {

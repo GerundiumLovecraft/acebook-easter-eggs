@@ -16,6 +16,8 @@ const [showComments, setShowComments] = useState(false);
 const [comments, setComments] = useState([]);
 const [newComment, setNewComment] = useState("");
 
+const token = localStorage.getItem("token");
+
 let currentUserId = null;
 
 if (token) {
