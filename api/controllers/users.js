@@ -13,10 +13,8 @@ const { email, password, firstName, lastName } = req.body;
       profile: {firstName, lastName} 
     });
     await user.save();
-    console.log("User created, id:", user._id.toString());
     res.status(201).json({ message: "OK" });
   } catch (err) {
-    console.error(err);
     res.status(400).json({ message: "Something went wrong" })
   }
 }
@@ -54,7 +52,7 @@ async function getProfile(req, res) {
     console.log(err);
     res.status(400).json({message: "Error fetching profile"})
   }
-}
+};
 
 const UsersController = {
   create: create,
