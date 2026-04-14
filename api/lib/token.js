@@ -2,7 +2,7 @@ const JWT = require("jsonwebtoken");
 const secret = process.env.JWT_SECRET;
 
 function generateToken(user_id) {
-  const SEVEN_DAYS_IN_SECS = 60 * 60 * 24 * 7;
+  const SEVEN_DAYS_IN_SECS = 60;
   const issuedAtTime = Math.floor(Date.now() / 1000);
   const expiryTime = issuedAtTime + SEVEN_DAYS_IN_SECS;
 
