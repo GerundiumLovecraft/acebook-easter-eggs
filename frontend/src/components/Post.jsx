@@ -15,7 +15,7 @@ function Post({ post, token }) {
 
   if (token) {
     const decoded = jwtDecode(token);
-    currentUserId = decoded.user_id || decoded.id || decoded._id;
+    currentUserId = decoded.sub
   }
 
   useEffect(() => {
