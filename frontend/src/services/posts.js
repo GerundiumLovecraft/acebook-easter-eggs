@@ -91,7 +91,7 @@ export async function deletePost(postId, token) {
   return data;
 }
 
-export async function getPostsById(userId, token) {
+export async function getPostsByUserId(userId, token) {
     const requestOptions = {
     method: "GET",
     headers: {
