@@ -50,27 +50,31 @@ h1 {
 
   a {
     font-weight: 500;
-    color: #d2bb8c;
+    color: #1877f2;
     text-decoration: inherit;
   }
 
   a:hover {
-    color: #f2e5c9;
+    color: #175ef8;
   }
 
   a:focus, button:focus, input:focus {
-    outline: 2px solid #f2e5c9;
+    outline: none;
   }
+
+  button:focus, input:focus {
+  outline: 2px solid #1877f2;
+}
 
   body {
     margin: 0;
     min-width: 320px;
     min-height: 100vh;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.07em;
     word-spacing: 0.16em;
     line-height: 1.5;
-    background-color: #01021b;
-    color: #ffffff;
+    background-color: #f4f7fa;
+    color: #1c1e21;
   }
 
   * {
