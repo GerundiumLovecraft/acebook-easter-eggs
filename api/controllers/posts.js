@@ -13,7 +13,7 @@ async function createPost(req, res) {
   try {
     const UID = req.user_id;
 
-    if (!message) {
+    if (!req.body.message) {
       return res.status(400).json({ message: "Message is required" });
     }
 
@@ -29,7 +29,7 @@ async function createPost(req, res) {
     res.status(201).json({ message: "Post created", post: post, token: newToken });
 
   } catch (err) {
-    console.log("Create Post Error:", error);
+    console.log("Create Post Error:", err);
     res.status(500).json({ message: "Internal server error" });
   };
 }
@@ -49,20 +49,6 @@ async function likePost(req, res) {
   res.status(200).json({ message: "Post liked", token: newToken });
 }
 
-async function likePost(req, res) {
-  const post = await Post.findById(req.params.id);
-
-  if (post.likedBy.includes(req.user_id)) {
-    return res.status(400).json({ message: "Already liked" });
-  }
-
-  post.likeCount = post.likeCount + 1;
-  post.likedBy.push(req.user_id);
-  await post.save();
-
-  const newToken = generateToken(req.user_id);
-  res.status(200).json({ message: "Post liked", token: newToken });
-}
 async function getComments(req, res) {
   try {
     const comments = await Comment.find({

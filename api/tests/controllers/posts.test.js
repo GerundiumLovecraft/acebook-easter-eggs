@@ -41,7 +41,6 @@ describe("/posts", () => {
   });
 
   afterEach(async () => {
-    await User.deleteMany({});
     await Post.deleteMany({});
   });
 
