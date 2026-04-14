@@ -22,10 +22,10 @@ async function getAllPosts(req, res) {
 
 async function getPostsByUserId(req, res) {
 
-  const userId = req.params.id
+  let userId = req.params.id
 
   if (userId === 'me') {
-    console.log('passing ME into params')
+    userId = req.user_id
   }
 
   try {
