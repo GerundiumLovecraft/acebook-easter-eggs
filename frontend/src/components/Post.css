@@ -63,6 +63,14 @@
   opacity: 0.7;
 }
 
+.post-actions button:disabled {
+  opacity: 1;
+  cursor: default;
+  -webkit-text-fill-color: initial;
+  color: initial;
+  filter: none;
+}
+
 .comments-section {
   margin-top: 12px;
   padding-top: 10px;
@@ -71,7 +79,6 @@
   border-radius: 10px;
   padding: 10px;
 }
-
 
 .comment {
   background: white;
@@ -83,7 +90,6 @@
   max-width: 85%;
 }
 
-
 .comment strong {
   display: block;
   font-size: 13px;
@@ -91,18 +97,15 @@
   color: #050505;
 }
 
-
 .comment span {
   color: #050505;
 }
-
 
 .comment-input {
   display: flex;
   gap: 8px;
   margin-top: 10px;
 }
-
 
 .comment-input input {
   flex: 1;
@@ -114,11 +117,9 @@
   background: white;
 }
 
-
 .comment-input input:focus {
   border-color: #1877f2;
 }
-
 
 .comment-input button {
   background: #1877f2;

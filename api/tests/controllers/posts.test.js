@@ -53,6 +53,25 @@ describe("/posts", () => {
         .send({ message: "Hello World!" });
       expect(response.status).toEqual(201);
     });
+    test("creates a post with an image", async () => {
+      await request(app)
+        .post("/posts")
+        .set("Authorization", `Bearer ${token}`)
+        .send({ message: "Hello World!", image: "https://example.com/image.jpg" });
+
+      const posts = await Post.find();
+      expect(posts[0].image).toEqual("https://example.com/image.jpg");
+    });
+    test("saves the user to the post", async () => {
+      await request(app)
+        .post("/posts")
+        .set("Authorization", `Bearer ${token}`)
+        .send({ message: "Hello World!" });
+
+      const posts = await Post.find();
+      expect(posts[0].user).toBeDefined();
+    });
+
 
     test("creates a post with an image", async () => {
       await request(app)
