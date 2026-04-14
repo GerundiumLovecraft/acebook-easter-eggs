@@ -50,6 +50,22 @@ async function sendRequest(req, res) {
         const fromUID = req.user_id;
         const toUID = req.body.toUID;
 
+        // Check if the toIUD is already in the friend list
+        const user = await User.findById(fromUID);
+        if (user.social.friendList.some((id) => id.toString() === toUID)) {
+            return res.status(400).json({ message: "This user is already in your friends list"});
+        }
+
+        // Look for for the friend request
+        const requestExists = await FriendRequest.findOne({
+            $or: [{ from: fromUID, to: toUID }, { from: toUID, to: fromUID }],
+            status: { $in: ["pending", "approved"]}
+        });
+
+        if (requestExists) {
+            return res.status(400).json({ message : "Friend request already exists"});
+        }
+
         // Create new friend request object
         const request = new FriendRequest({
             from: fromUID,
@@ -110,11 +126,42 @@ async function sendResponse(req, res) {
     }
 };
 
+async function friendRequestExists(req, res) {
+    try {
+        // Get the user IDs 
+        const fromUID = req.user_id;
+        const toUID = req.query.toUID;
+
+        // Look for for the friend request
+        const requestExists = await FriendRequest.findOne({
+            $or: [{ from: fromUID, to: toUID }, { from: toUID, to: fromUID }],
+            status: { $in: ["pending", "approved"]}
+        });
+
+        // Send true if requestExists
+        if (requestExists) {
+            res.status(200).json({
+                message: "Request exists",
+                requestExists: true,
+            });
+        } else {
+            res.status(200).json({
+                message: "Request doesn't exist",
+                requestExists: false,
+            });
+        };
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message : "You've stumbled upon a server issue"});
+    }
+}
+
 
 const FriendRequestsControler = {
     getFriendRequestsById: getFriendRequestsById,
     sendRequest: sendRequest,
-    sendResponse: sendResponse,   
+    sendResponse: sendResponse,  
+    friendRequestExists: friendRequestExists, 
 }
 
 module.exports = FriendRequestsControler;
