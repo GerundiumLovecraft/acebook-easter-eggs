@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { signup } from "../../services/authentication";
 import "./SignupPage.css"
 
@@ -60,45 +60,45 @@ export function SignupPage() {
   }
 
   return (
-    <div>
+    <div className="signup-container">
     <h1>Welcome in!</h1>
       <h2>Signup</h2>
       {errorMessage && <p className="errorMessage">{errorMessage}</p>}
-      <form onSubmit={handleSubmit}>
-      <label htmlFor="firstName">First name: </label>
-        <input className="FormField"
+      <form className="signup-form" onSubmit={handleSubmit}>
+      <label className="signup-label" htmlFor="firstName">First name: </label>
+        <input className="signup-field"
           id="firstName"
           type="text"
           value={firstName}
           onChange={handleFirstNameChange}
         />
         <br />
-        <label htmlFor="lastName">Last name: </label>
-        <input className="FormField"
+        <label className="signup-label" htmlFor="lastName">Last name: </label>
+        <input className="signup-field"
           id="lastName"
           type="text"
           value={lastName}
           onChange={handleLastNameChange}
         />
         <br />
-        <label htmlFor="email">Email: </label>
-        <input className="FormField"
+        <label className="signup-label" htmlFor="email">Email: </label>
+        <input className="signup-field"
           id="email"
           type="text"
           value={email}
           onChange={handleEmailChange}
         />
         <br />
-        <label htmlFor="password">Password: </label>
-        <input className="FormField"
+        <label className="signup-label" htmlFor="password">Password: </label>
+        <input className="signup-field"
           id="password"
           type="password"
           value={password}
           onChange={handlePasswordChange}
         />
         <br />
-        <label htmlFor="confirmPassword">Re-enter Password: </label>
-        <input className="FormField"
+        <label className="signup-label" htmlFor="confirmPassword">Re-enter Password: </label>
+        <input className="signup-field"
           id="confirmPassword"
           type="password"
           value={confirmPassword}
@@ -107,6 +107,7 @@ export function SignupPage() {
         <br />
         <input role="submit-button" id="submit" type="submit" value="Submit" />
       </form>
+      <Link to="/login">Already part of Acebook? Log in here!</Link>
     </div>
   );
 }
