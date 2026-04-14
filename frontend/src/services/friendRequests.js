@@ -27,3 +27,18 @@ export async function sendFriendRequestResponse(token, requestId, status) {
     }
     return response.json();
 }
+
+export async function friendRequestExists(token, UID) {
+    const response = await fetch(`${BACKEND_URL}/friend_requests/request_exists?toUID=${UID}`, {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    if(!response.ok) {
+        throw new Error("Failed to check friend request");
+    };
+
+    return response.json();
+};
