@@ -20,6 +20,23 @@ async function getAllPosts(req, res) {
   }
 }
 
+async function getPostsByUserId(req, res) {
+
+  const userId = req.params.id
+
+  if (userId === 'me') {
+    console.log('passing ME into params')
+  }
+
+  try {
+      const posts = await Post.find({user: userId}).populate('user', 'profile');
+      const token = generateToken(req.user_id);
+      res.status(200).json({posts: posts, token: token});
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
 async function createPost(req, res) {
   try {
     const UID = req.user_id;
@@ -133,6 +150,8 @@ const PostsController = {
   getComments: getComments,
   addComment: addComment,
   deletePostById: deletePostById,
+  likePost: likePost,
+  getPostsByUserId: getPostsByUserId
 };
 
 module.exports = PostsController;
