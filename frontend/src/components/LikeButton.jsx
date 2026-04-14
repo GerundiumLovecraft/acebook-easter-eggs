@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { likePost, unlikePost } from "../services/posts";
 import { jwtDecode } from "jwt-decode";
+import { Heart } from "lucide-react";
 
 function LikeButton({ postId, likeCount, likedBy, token }) {
   const [count, setCount] = useState(likeCount);
@@ -37,7 +38,12 @@ function LikeButton({ postId, likeCount, likedBy, token }) {
   return (
     <div>
       <button onClick={liked ? handleUnlike : handleLike}>
-        {liked ? "❤️" : "🩶"} {count}
+        <Heart
+          size={18}
+          fill={liked ? "#ef4444" : "none"}
+          color={liked ? "#ef4444" : "#666"}
+        />
+        {count}
       </button>
     </div>
   );

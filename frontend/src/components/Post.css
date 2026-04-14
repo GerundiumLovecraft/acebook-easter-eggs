@@ -57,6 +57,9 @@
   border: none;
   cursor: pointer;
   font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .post-actions button:hover {

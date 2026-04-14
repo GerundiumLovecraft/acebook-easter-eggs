@@ -62,7 +62,8 @@ h1 {
 
   a:focus,
   button:focus,
-  input:focus {
+  input:focus 
+  textarea:focus {
     outline: none;
   }
 
@@ -75,8 +76,8 @@ h1 {
     margin: 0;
     min-width: 320px;
     min-height: 100vh;
-    letter-spacing: 0.07em;
-    word-spacing: 0.16em;
+    letter-spacing: 0.03em;
+    word-spacing: 0.05em;
     line-height: 1.5;
     background-color: #f4f7fa;
     color: #1c1e21;
