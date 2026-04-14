@@ -4,13 +4,19 @@ const { generateToken } = require("../lib/token");
 const mongoose = require("mongoose");
 
 async function getAllPosts(req, res) {
-  const posts = await Post.find();
+  const posts = await Post.find().populate('user');
   const token = generateToken(req.user_id);
   res.status(200).json({ posts: posts, token: token });
 }
 
 async function createPost(req, res) {
-  const post = new Post(req.body);
+  const UID = req.user_id;
+
+  const post = new Post({
+    message: req.body.message,
+    image: req.body.image ? req.body.image : "",
+    user: UID,
+  });
   post.save();
 
   const newToken = generateToken(req.user_id);
@@ -59,40 +65,9 @@ async function addComment(req, res) {
   }
 }
 
-async function getComments(req, res){
-  try {
-    const comments = await Comment.find({
-      postId: req.params.id
-    }).populate("userId", "profile");
-
-    res.json({ comments });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-async function addComment(req, res) {
-  try {
-    const comment = new Comment({
-      postId: req.params.id,
-      userId: req.user_id,
-      content: req.body.content
-    });
-
-    await comment.save();
-
-    res.status(201).json({ message: "Comment added" });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-}
-
 const PostsController = {
   getAllPosts: getAllPosts,
   createPost: createPost,
-  likePost: likePost,
-  getComments: getComments,
-  addComment: addComment,
   likePost: likePost,
   getComments: getComments,
   addComment: addComment,

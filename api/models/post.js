@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
 const PostSchema = new mongoose.Schema({
-  message: String,
-  image: String,
-  user: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
+  message: { type: String },
+  image: { type: String, default: ""},
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   likeCount: { type: Number, default: 0 },
   likedBy: { type: Array, default: [] },
 }, { timestamps: true });

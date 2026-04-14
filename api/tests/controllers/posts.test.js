@@ -53,6 +53,7 @@ describe("/posts", () => {
         .send({ message: "Hello World!" });
       expect(response.status).toEqual(201);
     });
+
     test("creates a post with an image", async () => {
       await request(app)
         .post("/posts")
@@ -62,11 +63,12 @@ describe("/posts", () => {
       const posts = await Post.find();
       expect(posts[0].image).toEqual("https://example.com/image.jpg");
     });
+
     test("saves the user to the post", async () => {
       await request(app)
         .post("/posts")
         .set("Authorization", `Bearer ${token}`)
-        .send({ message: "Hello World!" });
+        .send({ message: "Hello World!"});
 
       const posts = await Post.find();
       expect(posts[0].user).toBeDefined();
@@ -141,9 +143,7 @@ describe("/posts", () => {
       expect(response.status).toEqual(200);
     });
     test("returns the user with each post", async () => {
-      const user = new User({ email: "post-test@test.com", password: "12345678" });
-      await user.save();
-      const userToken = createToken(user.id);
+      const userToken = createToken(userId);
 
       await request(app)
         .post("/posts")

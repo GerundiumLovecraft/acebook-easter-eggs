@@ -221,7 +221,6 @@ describe("/users", () => {
       expect(response.body.message).toEqual("User not found");
     });
   });
-});
 
   describe("GET /users/me", () => {
     test("returns the current user without the password", async () => {
@@ -243,5 +242,6 @@ describe("/users", () => {
       expect(response.body.password).toBeUndefined();
     });
   });
+});
 
 
