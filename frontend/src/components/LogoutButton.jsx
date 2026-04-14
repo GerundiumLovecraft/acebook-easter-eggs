@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { PowerIcon } from "@heroicons/react/24/solid";
+import { LogOut } from "lucide-react";
 
 function LogoutButton() {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ function LogoutButton() {
 
   return (
     <button className="logout" onClick={logOut}>
-      <PowerIcon className="dropdown-icon" />
+      <LogOut size={14} />
       Log Out
     </button>
   );
