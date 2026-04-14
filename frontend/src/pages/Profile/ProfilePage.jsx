@@ -4,6 +4,7 @@ import { getUser, getCurrentUser, updateCurrentUser } from "../../services/users
 import { formatCreatedAt, formatLastUpdated } from "../../utils/dates";
 import { getPostsByUserId } from "../../services/posts";
 import Post from "../../components/Post";
+import { FriendRequestButton } from "./FriendRequestButton";
 
 
 export function ProfilePage() {
@@ -125,7 +126,7 @@ export function ProfilePage() {
         isOwnProfile ? <> 
         <button onClick={handleEditClick}>Edit Profile</button> 
         <button>Create Post</button> </> 
-        : <button>Add friend</button>
+        : <FriendRequestButton token={token} profilePageId={id}/>
     )
 
     return (
