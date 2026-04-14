@@ -112,7 +112,7 @@ async function deletePostById(req, res) {
       return res.status(404).json({message: "Post not found"});
     }
 
-    if (req.user_id !== postFound.author.authorId) {
+    if (req.user_id !== postFound.user.toString()) {
       return res.status(403).json({message: "Not authorised to delete the post"})
     }
 
