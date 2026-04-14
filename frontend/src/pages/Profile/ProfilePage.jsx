@@ -18,15 +18,12 @@ export function ProfilePage() {
     const [saveError, setSaveError] = useState("")
     const [isSaving, setIsSaving] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
-    const [posts, setPosts] = useState(null)
+    const [posts, setPosts] = useState([])
     const {id} = useParams()
     const navigate = useNavigate();
-
     const token = localStorage.getItem("token");
 
     useEffect(() => {
-        
-
         if (!token) {
             navigate("/login");
             return;
@@ -40,33 +37,16 @@ export function ProfilePage() {
             .then(([profileData, currentUserData, postsData]) => {
                 setProfile(profileData);
                 setCurrentUser(currentUserData);
-                setPosts(postsData)
+                setPosts(postsData.posts)
                 setLoading(false);
             })
             .catch((error) => {
                 console.log(error);
                 setLoading(false);
             });
-    });
-
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        Promise.all([
-            getPostsByUserId(id, token)
-            ])
-            .then(([postsData]) => {
-                setPosts(postsData)
-                setLoading(false);
-            })
-            .catch((error) => {
-                console.log(error);
-                setLoading(false);
-            });
-    },[id])
+    }, [id, token, navigate]);
 
     const isOwnProfile = currentUser?._id === profile?._id;
-
-    console.log(posts, '<---posts')
 
     function handleEditClick() {
         setFormData({
