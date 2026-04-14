@@ -97,8 +97,8 @@ async function addComment(req, res) {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-};
-  
+}
+
 async function deletePostById(req, res) {
   try {
 
@@ -108,7 +108,7 @@ async function deletePostById(req, res) {
       return res.status(404).json({message: "Invalid post ID format. Please use a valid MongoDB ObjectId"});
     }
 
-    const postFound = await Post.findById({postId});
+    const postFound = await Post.findById(postId);
     
     // Error message if the post is not found
     if (!postFound) {
@@ -120,7 +120,7 @@ async function deletePostById(req, res) {
       return res.status(403).json({message: "Not authorised to delete the post"})
     }
 
-    const postDeleted = await Post.deleteOne(postFound);
+    const postDeleted = await Post.deleteOne({_id: postId});
 
     res.status(200).json({message: "Post successfully deleted", postDeleted});
   } catch (error) {
@@ -136,6 +136,7 @@ const PostsController = {
   unlikePost: unlikePost,
   getComments: getComments,
   addComment: addComment,
+  deletePostById: deletePostById,
 };
 
 module.exports = PostsController;
