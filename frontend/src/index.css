@@ -1,16 +1,18 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family:
+    "Plus Jakarta Sans", system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
 h1 {
-  font-family: Verdana;
+  font-family:
+    "Plus Jakarta Sans", system-ui, Avenir, Helvetica, Arial, sans-serif;
   font-size: 3em;
 }
 
 @layer base {
   .theme {
     --font-heading: var(--font-sans);
-    --font-sans: 'Geist Variable', sans-serif;
+    --font-sans: "Geist Variable", sans-serif;
   }
 
   :root {
@@ -58,13 +60,16 @@ h1 {
     color: #175ef8;
   }
 
-  a:focus, button:focus, input:focus {
+  a:focus,
+  button:focus,
+  input:focus {
     outline: none;
   }
 
-  button:focus, input:focus {
-  outline: 2px solid #1877f2;
-}
+  button:focus,
+  input:focus {
+    outline: 2px solid #1877f2;
+  }
 
   body {
     margin: 0;
@@ -77,6 +82,10 @@ h1 {
     color: #1c1e21;
   }
 
+  input, textarea, button {
+    font-family: "Plus Jakarta Sans", system-ui, Avenir, Helvetica, Arial, sans-serif;
+  }
+
   * {
     border-color: hsl(var(--border));
   }
@@ -86,6 +95,7 @@ h1 {
   }
 
   html {
-    @apply font-sans;
+    font-family:
+      "Plus Jakarta Sans", system-ui, Avenir, Helvetica, Arial, sans-serif;
   }
 }
