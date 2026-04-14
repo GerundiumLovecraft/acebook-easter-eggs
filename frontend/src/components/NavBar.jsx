@@ -3,10 +3,7 @@ import { Link } from "react-router-dom";
 import LogoutButton from "./LogoutButton";
 import "./NavBar.css";
 
-import {
-  UserCircleIcon,
-  ChevronDownIcon,
-} from "@heroicons/react/24/solid";
+import { UserCircleIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
 
 function NavBar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -17,6 +14,7 @@ function NavBar() {
 
       <div className="navbar-links">
         <Link to="/posts">Home</Link>
+        <Link to="/posts/new">+ Create Post</Link>
         <Link to="/friends">Friends</Link>
         <Link to="/notifications">Notifications</Link>
       </div>

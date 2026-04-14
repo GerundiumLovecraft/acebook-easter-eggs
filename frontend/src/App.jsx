@@ -5,7 +5,8 @@ import "./App.css";
 import { LoginPage } from "./pages/Login/LoginPage";
 import { SignupPage } from "./pages/Signup/SignupPage";
 import { FeedPage } from "./pages/Feed/FeedPage";
-import { ProfilePage } from "./pages/Profile/ProfilePage"
+import { ProfilePage } from "./pages/Profile/ProfilePage";
+import NewPostPage from "./pages/NewPost/NewPostPage";
 import ProtectedRoute from "./layouts/ProtectedRoute";
 import MainLayout from "./layouts/MainLayout";
 
@@ -21,6 +22,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/posts" replace /> },
       { path: "posts", element: <FeedPage/> },
+      { path : "posts/new", element: <NewPostPage /> },
       { path: "users/:id", element: <ProfilePage/> },
     ]
   },

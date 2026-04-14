@@ -48,20 +48,6 @@ async function likePost(req, res) {
   res.status(200).json({ message: "Post liked", token: newToken });
 }
 
-async function likePost(req, res) {
-  const post = await Post.findById(req.params.id);
-
-  if (post.likedBy.includes(req.user_id)) {
-    return res.status(400).json({ message: "Already liked" });
-  }
-
-  post.likeCount = post.likeCount + 1;
-  post.likedBy.push(req.user_id);
-  await post.save();
-
-  const newToken = generateToken(req.user_id);
-  res.status(200).json({ message: "Post liked", token: newToken });
-}
 async function getComments(req, res) {
   try {
     const comments = await Comment.find({
