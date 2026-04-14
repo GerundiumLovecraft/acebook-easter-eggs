@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import LogoutButton from "./LogoutButton";
 import "./NavBar.css";
@@ -6,6 +6,18 @@ import { House, SquarePen, Users, Bell, User, Search, Star } from "lucide-react"
 
 function NavBar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setMenuOpen(false);
+    }
+  }
+
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <nav className="navbar">
@@ -35,7 +47,7 @@ function NavBar() {
           </Link>
         </div>
 
-        <div className="navbar-profile">
+        <div className="navbar-profile" ref={dropdownRef}>
           <button
             className="profile-button"
             onClick={() => setMenuOpen(!menuOpen)}
