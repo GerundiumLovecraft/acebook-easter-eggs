@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { getUser, getCurrentUser, updateCurrentUser } from "../../services/users";
 import { formatCreatedAt, formatLastUpdated } from "../../utils/dates";
 import { getPostsByUserId } from "../../services/posts";
+import Post from "../../components/Post";
 
 
 export function ProfilePage() {
@@ -21,8 +22,10 @@ export function ProfilePage() {
     const {id} = useParams()
     const navigate = useNavigate();
 
+    const token = localStorage.getItem("token");
+
     useEffect(() => {
-        const token = localStorage.getItem("token");
+        
 
         if (!token) {
             navigate("/login");
@@ -44,7 +47,7 @@ export function ProfilePage() {
                 console.log(error);
                 setLoading(false);
             });
-    }, [id, navigate]);
+    });
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -146,6 +149,7 @@ export function ProfilePage() {
     )
 
     return (
+        <>
         <div>
             <img src={profilePic}/>
             {nameSection}
@@ -154,6 +158,13 @@ export function ProfilePage() {
             <p>Active: {formatLastUpdated(updatedAt)}</p>
             {actionButtons}
         </div>
+        <h2>Posts</h2>
+            <div className="feed" role="feed">
+                {posts.map((post) => (
+                <Post post={post} key={post._id} token={token} />
+                ))}
+            </div>
+        </>
     );
 
 }
