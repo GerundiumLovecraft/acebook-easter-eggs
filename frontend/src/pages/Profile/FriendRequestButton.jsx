@@ -10,7 +10,7 @@ export function FriendRequestButton({ status, isSaving, onAddFriend }) {
     }
 
     if (status === "friends") {
-        return <p className="friend-request-status">Friends!</p>;
+        return <p className="friend-request-status">✓ Friends</p>
     }
 
     if (status === "requested") {
