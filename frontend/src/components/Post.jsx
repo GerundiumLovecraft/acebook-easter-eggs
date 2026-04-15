@@ -80,7 +80,7 @@ function Post({ post, token }) {
         
         <button onClick={() => setShowComments(!showComments)}>
           <MessageCircle size={18} color="#666" />
-          Comment
+          Comment ({showComments ? comments.length : post.commentCount})
         </button>
       </div>
 
