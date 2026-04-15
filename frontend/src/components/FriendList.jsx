@@ -14,6 +14,8 @@ function FriendList({ friendList }) {
                                 <li key={friend.id} className="friend">
                                     <Link to={`/users/${friend.id}`}>
                                         <img className="friend-pic" src={friend.profile.profilePic} alt={`${friend.profile.firstName[0]}${friend.profile.lastName[0]}`} />
+                                    </Link>
+                                    <Link to={`/users/${friend.id}`}>
                                         <p className="friend-name">{friend.profile.firstName} {friend.profile.lastName}</p>
                                     </Link>
                                 </li>
