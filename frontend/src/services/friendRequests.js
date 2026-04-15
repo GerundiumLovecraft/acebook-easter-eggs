@@ -38,10 +38,10 @@ export async function friendRequestExists(token, UID) {
 
     if(!response.ok) {
         throw new Error("Failed to check friend request");
-    };
+    }
 
     return response.json();
-};
+}
 
 export async function sendFriendRequest(token, UID) {
     const response = await fetch(`${BACKEND_URL}/friend_requests`, {
@@ -59,7 +59,7 @@ export async function sendFriendRequest(token, UID) {
         throw new alert(body.message);
     } else if (!response.ok) {
         throw new alert("Failed to send friend request");
-    };
+    }
 
     return body
 }

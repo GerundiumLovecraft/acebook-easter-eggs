@@ -24,3 +24,20 @@ export async function getCurrentUser(token) {
 
     return response.json();
 }
+
+export async function updateCurrentUser(updates, token) {
+    const response = await fetch(`${BACKEND_URL}/users/me`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(updates)
+    })
+    const data = await response.json()
+
+    if (response.status !== 200) {
+        throw new Error(data.message || "Could not update user");
+    }
+    return data
+}
