@@ -136,3 +136,14 @@
 .comment-input button:hover {
   background: #166fe5;
 }
+
+/* DELETE*/
+
+.delete-button {
+  color: #ef4444;
+}
+
+.delete-icon {
+  width: 15px;
+  height: 15px;
+} 

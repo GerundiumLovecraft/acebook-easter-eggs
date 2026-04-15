@@ -5,6 +5,8 @@ import { getComments, addComment } from "../services/comments";
 import { jwtDecode } from "jwt-decode";
 import { MessageCircle } from "lucide-react"
 import { Link } from "react-router-dom";
+import { deletePost } from "../services/posts";
+import { Trash2 } from 'lucide-react';
 
 function Post({ post, token }) {
   const { message, image, createdAt, user = {} } = post;
@@ -12,16 +14,18 @@ function Post({ post, token }) {
   const [showComments, setShowComments] = useState(false);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+  const [isDeleted, setDeleted] = useState(false);
 
   let currentUserId = null;
 
-  if (token) {
-    const decoded = jwtDecode(token);
-    currentUserId = decoded.sub
-  }
+if (token) {
+  const decoded = jwtDecode(token);
+  currentUserId = decoded.sub || decoded.user_id || decoded.id || decoded._id;
+}
 
-  useEffect(() => {
-    if (!showComments) return;
+const ownerOfPost = currentUserId && post.user && currentUserId.toString() === (post.user._id || post.user).toString();
+useEffect(() => {
+  if (!showComments) return;
 
     const fetchComments = async () => {
       const data = await getComments(post._id, token);
@@ -41,6 +45,20 @@ function Post({ post, token }) {
       setNewComment("");
     });
   };
+
+  const handleDelete = async () => {
+    const message = "Move to your bin? \n\nItems in your bin will be permanently deleted. You won't be able to see this post on your feed."
+    if(window.confirm(message)) {
+      try {
+        await deletePost(post._id, token);
+        setDeleted(true);
+      } catch (error) {
+        alert("Something went wrong")
+      }
+    }
+  }
+
+if (isDeleted) return null;
 
   return (
     <div className="post-card">
@@ -86,6 +104,13 @@ function Post({ post, token }) {
           <MessageCircle size={18} color="#666" />
           Comment ({showComments ? comments.length : post.commentCount})
         </button>
+      {/* DELETE BUTTON for post owner only */}
+      {ownerOfPost && (
+        <button onClick={handleDelete} className="delete-button" title="Move to bin">
+          <Trash2 className="delete-icon" />
+          <span>Delete</span>
+        </button>
+      )}
       </div>
 
       {/* COMMENTS SECTION */}
