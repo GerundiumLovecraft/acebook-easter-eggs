@@ -6,10 +6,7 @@ import { jwtDecode } from "jwt-decode";
 import { MessageCircle } from "lucide-react"
 import { Link } from "react-router-dom";
 import { deletePost } from "../services/posts";
-
-import {
-  TrashIcon,
-} from "@heroicons/react/24/solid";
+import { Trash2 } from 'lucide-react';
 
 function Post({ post, token }) {
   const { message, image, createdAt, user = {} } = post;
@@ -107,14 +104,14 @@ if (isDeleted) return null;
           <MessageCircle size={18} color="#666" />
           Comment ({showComments ? comments.length : post.commentCount})
         </button>
-      </div>
       {/* DELETE BUTTON for post owner only */}
       {ownerOfPost && (
         <button onClick={handleDelete} className="delete-button" title="Move to bin">
-          <TrashIcon className="delete-icon" />
+          <Trash2 className="delete-icon" />
           <span>Delete</span>
         </button>
       )}
+      </div>
 
       {/* COMMENTS SECTION */}
       {showComments && (
