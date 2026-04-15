@@ -5,6 +5,11 @@ import { getComments, addComment } from "../services/comments";
 import { jwtDecode } from "jwt-decode";
 import { MessageCircle } from "lucide-react"
 import { Link } from "react-router-dom";
+import { deletePost } from "../services/posts";
+
+import {
+  TrashIcon,
+} from "@heroicons/react/24/solid";
 
 function Post({ post, token }) {
   const { message, image, createdAt, user = {} } = post;
@@ -12,6 +17,7 @@ function Post({ post, token }) {
   const [showComments, setShowComments] = useState(false);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+  const [isDeleted, setDeleted] = useState(false);
 
   let currentUserId = null;
 
@@ -19,6 +25,8 @@ function Post({ post, token }) {
     const decoded = jwtDecode(token);
     currentUserId = decoded.sub
   }
+
+  const ownerOfPost = currentUserId?.toString() === post.user._id?.toString();
 
   useEffect(() => {
     if (!showComments) return;
@@ -41,6 +49,20 @@ function Post({ post, token }) {
       setNewComment("");
     });
   };
+
+  const handleDelete = async () => {
+    const message = "Move to your bin? \n\nItems in your bin will be permanently deleted. You won't be able to see this post on your feed."
+    if(window.confirm(message)) {
+      try {
+        await deletePost(post._id, token);
+        setDeleted(true);
+      } catch (error) {
+        alert("Something went wrong")
+      }
+    }
+  }
+
+if (isDeleted) return null;
 
   return (
     <div className="post-card">
@@ -87,6 +109,14 @@ function Post({ post, token }) {
           Comment ({showComments ? comments.length : post.commentCount})
         </button>
       </div>
+
+      {/* DELETE BUTTON for post owner only */}
+      {ownerOfPost && (
+        <button onClick={handleDelete} className="delete-button" title="Move to bin">
+          <TrashIcon className="delete-icon" />
+          <span>Delete</span>
+        </button>
+      )}
 
       {/* COMMENTS SECTION */}
       {showComments && (
