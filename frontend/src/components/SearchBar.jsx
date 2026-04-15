@@ -19,7 +19,6 @@ function SearchBar() {
         // Set a timer to fire search request after 300ms
         const timer = setTimeout(async () => {
             const users = await searchUser(token, searchName);
-            console.log(`Received data: ${users}`);
             setQueryResults(users);
         }, 300);
 

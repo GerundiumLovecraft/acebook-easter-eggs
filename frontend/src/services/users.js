@@ -39,14 +39,13 @@ export async function searchUser(token, name) {
 
     const data = await response.json();
 
-    console.log(`The data is: ${data}`);
-
     if (!response.ok) {
         throw new Error("Server error")
     };
 
     return data.users;
 };
+
 export async function updateCurrentUser(updates, token) {
     const response = await fetch(`${BACKEND_URL}/users/me`, {
         method: "PATCH",
