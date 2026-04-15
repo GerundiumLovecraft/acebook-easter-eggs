@@ -336,9 +336,9 @@ const seedDatabase = async () => {
 
         console.log("Seeded friend requests.");
 
-        console.log(":white_check_mark: Database seeded successfully!");
+        console.log("✅ Database seeded successfully!");
     } catch (err) {
-        console.error(":x: Seeding error:", err);
+        console.error("❌ Seeding error:", err);
         process.exitCode = 1;
     } finally {
         await mongoose.disconnect();
