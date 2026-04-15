@@ -54,10 +54,35 @@ async function getProfile(req, res) {
   }
 };
 
+async function searchUser(req, res) {
+  try {
+    // Turn search string into a regex object
+    const partialNameRegex = new RegExp(req.query.name, "i");
+    // Look for 3 matching users
+    const matchingUsers = await User
+      .find({$or: [{'profile.firstName': partialNameRegex}, {'profile.lastName': partialNameRegex}]})
+      .select("_id profile.firstName profile.lastName profile.profilePic")
+      .limit(3);
+
+    res.status(200).json({
+      message: "Matching users",
+      users: matchingUsers,
+    });
+    
+    
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({
+      message: "You have stumbled upon a server error",
+    })
+  }
+}
+
 const UsersController = {
   create: create,
   getCurrentUser: getCurrentUser,
-  getProfile: getProfile
+  getProfile: getProfile,
+  searchUser: searchUser,
 };
 
 module.exports = UsersController; 
