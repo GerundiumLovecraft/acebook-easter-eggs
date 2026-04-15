@@ -24,3 +24,26 @@ export async function getCurrentUser(token) {
 
     return response.json();
 }
+
+export async function searchUser(token, name) {
+    console.log("I am in searchUser service!");
+
+    const response = await fetch(`${BACKEND_URL}/users/search?name=${name}`, {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    console.log(`Received the reponse: ${response}`);
+
+    const data = await response.json();
+
+    console.log(`The data is: ${data}`);
+
+    if (!response.ok) {
+        throw new Error("Server error")
+    };
+
+    return data.users;
+};

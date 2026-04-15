@@ -58,9 +58,12 @@ async function searchUser(req, res) {
   try {
     // Turn search string into a regex object
     const partialNameRegex = new RegExp(req.query.name, "i");
+    
     // Look for 3 matching users
     const matchingUsers = await User
-      .find({$or: [{'profile.firstName': partialNameRegex}, {'profile.lastName': partialNameRegex}]})
+      .find({
+        $or: [{'profile.firstName': partialNameRegex}, {'profile.lastName': partialNameRegex}],
+        _id: { $ne: req.user_id }})
       .select("_id profile.firstName profile.lastName profile.profilePic")
       .limit(3);
 
