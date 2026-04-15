@@ -83,7 +83,7 @@ function Post({ post, token }) {
         />
         
         <button onClick={() => setShowComments(!showComments)}>
-          💬 Comment
+          💬 Comment ({showComments ? comments.length : post.commentCount})
         </button>
       </div>
 
