@@ -21,15 +21,14 @@ function Post({ post, token }) {
 
   let currentUserId = null;
 
-  if (token) {
-    const decoded = jwtDecode(token);
-    currentUserId = decoded.sub
-  }
+if (token) {
+  const decoded = jwtDecode(token);
+  currentUserId = decoded.sub || decoded.user_id || decoded.id || decoded._id;
+}
 
-  const ownerOfPost = currentUserId?.toString() === post.user?._id?.toString();
-
-  useEffect(() => {
-    if (!showComments) return;
+const ownerOfPost = currentUserId && post.user && currentUserId.toString() === (post.user._id || post.user).toString();
+useEffect(() => {
+  if (!showComments) return;
 
     const fetchComments = async () => {
       const data = await getComments(post._id, token);
@@ -109,7 +108,6 @@ if (isDeleted) return null;
           Comment ({showComments ? comments.length : post.commentCount})
         </button>
       </div>
-
       {/* DELETE BUTTON for post owner only */}
       {ownerOfPost && (
         <button onClick={handleDelete} className="delete-button" title="Move to bin">
