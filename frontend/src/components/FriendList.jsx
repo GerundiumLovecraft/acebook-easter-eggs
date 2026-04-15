@@ -11,11 +11,11 @@ function FriendList({ friendList }) {
                     <ul>
                         {
                             friendList.map((friend) => (
-                                <li key={friend.id} className="friend">
-                                    <Link to={`/users/${friend.id}`}>
+                                <li key={friend._id} className="friend">
+                                    <Link to={`/users/${friend._id}`}>
                                         <img className="friend-pic" src={friend.profile.profilePic} alt={`${friend.profile.firstName[0]}${friend.profile.lastName[0]}`} />
                                     </Link>
-                                    <Link to={`/users/${friend.id}`}>
+                                    <Link to={`/users/${friend._id}`}>
                                         <p className="friend-name">{friend.profile.firstName} {friend.profile.lastName}</p>
                                     </Link>
                                 </li>

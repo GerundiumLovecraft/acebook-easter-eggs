@@ -6,6 +6,7 @@ const tokenChecker = require("../middleware/tokenChecker");
 const router = express.Router();
 
 router.post("/", UsersController.create);
+router.get("/search", tokenChecker, UsersController.searchUser);
 router.get("/me", tokenChecker, UsersController.getCurrentUser);
 router.patch("/me", tokenChecker, UsersController.updateCurrentUser);
 router.get("/:id", tokenChecker, UsersController.getProfile);
