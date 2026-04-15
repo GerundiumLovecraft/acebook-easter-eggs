@@ -5,6 +5,8 @@ import { formatCreatedAt, formatLastUpdated } from "../../utils/dates";
 import { getPostsByUserId } from "../../services/posts";
 import Post from "../../components/Post";
 import { FriendRequestButton } from "./FriendRequestButton";
+import { friendRequestExists, sendFriendRequest } from "../../services/friendRequests"
+import { getFriendList } from "../../services/friends"
 
 
 export function ProfilePage() {
@@ -20,6 +22,8 @@ export function ProfilePage() {
     const [isSaving, setIsSaving] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
     const [posts, setPosts] = useState([])
+    const [friendshipStatus, setFriendshipStatus] = useState("loading");
+    const [isSendingFriendRequest, setIsSendingFriendRequest] = useState(false);
     const {id} = useParams()
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
@@ -30,21 +34,48 @@ export function ProfilePage() {
             return;
         }
 
-        Promise.all([
-            getUser(id, token),
-            getCurrentUser(token),
-            getPostsByUserId(id, token)
-            ])
-            .then(([profileData, currentUserData, postsData]) => {
-                setProfile(profileData);
-                setCurrentUser(currentUserData);
-                setPosts(postsData.posts)
+        async function loadProfilePage() {
+            try {
+                const [profileData, currentUserData, postsData] = await Promise.all([
+                getUser(id, token),
+                getCurrentUser(token),
+                getPostsByUserId(id, token),
+            ]);
+
+            setProfile(profileData);
+            setCurrentUser(currentUserData);
+            setPosts(postsData.posts || []);
+
+            const isOwn = currentUserData?._id === profileData?._id;
+
+            if (isOwn) {
+                setFriendshipStatus("self");
+                } else {
+                const [friendListData, friendRequestData] = await Promise.all([
+                    getFriendList(token),
+                    friendRequestExists(token, id),
+                ]);
+
+                const isFriend = friendListData.friendList.some(
+                    (friend) => friend._id === id
+                );
+
+                if (isFriend) {
+                    setFriendshipStatus("friends");
+                } else if (friendRequestData.requestExists) {
+                    setFriendshipStatus("requested");
+                } else {
+                    setFriendshipStatus("none");
+                }
+                }
+            } catch (error) {
+                console.error(error);
+            } finally {
                 setLoading(false);
-            })
-            .catch((error) => {
-                console.log(error);
-                setLoading(false);
-            });
+            }
+    }
+
+    loadProfilePage();
     }, [id, token, navigate]);
 
     const isOwnProfile = currentUser?._id === profile?._id;
@@ -77,27 +108,34 @@ export function ProfilePage() {
         setSaveError("");
 
         try {
-            const token = localStorage.getItem("token");
             const result = await updateCurrentUser(formData, token);
 
             setProfile(result.user);
             setCurrentUser(result.user);
             setIsEditing(false);
         } catch (error) {
-            setSaveError(error.message);
-            console.error(saveError)
+            setSaveError(error.message || "Could not save profile");
+            console.error(error);
         } finally {
             setIsSaving(false);
         }
     }
 
-    if (loading) {
-        return <p>Loading...</p>;
+    async function handleSendFriendRequest() {
+        setIsSendingFriendRequest(true);
+
+        try {
+        await sendFriendRequest(token, id);
+        setFriendshipStatus("requested");
+        } catch (error) {
+        console.error(error);
+        } finally {
+        setIsSendingFriendRequest(false);
+        }
     }
 
-    if (!profile) {
-        return <p>User not found</p>;
-    }
+    if (loading) { return <p>Loading...</p>;}
+    if (!profile) { return <p>User not found</p>;}
 
     const { email, createdAt, updatedAt } = profile;
     const { firstName, lastName, profilePic } = profile.profile;
@@ -117,8 +155,6 @@ export function ProfilePage() {
             <p>Email: {email}</p>
         );
 
-    console.log(id, '<---id in ProfilePage')
-
     const actionButtons = isEditing ? (
     <>
         {isSaving ? <button disabled={true}>Saving...</button> : <button onClick={handleSaveClick}>Save</button>}
@@ -128,7 +164,11 @@ export function ProfilePage() {
         isOwnProfile ? <> 
         <button onClick={handleEditClick}>Edit Profile</button> 
         <button>Create Post</button> </> 
-        : <FriendRequestButton token={token} profilePageId={id}/>
+        : <FriendRequestButton
+            status={friendshipStatus}
+            isSaving={isSendingFriendRequest}
+            onAddFriend={handleSendFriendRequest}
+        />
     )
 
     return (
