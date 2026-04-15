@@ -23,7 +23,7 @@ const MainLayout = () => {
   return (
     <>
       <NavBar notificationCount={notificationCount} />
-      <Outlet />
+      <Outlet context={{ setNotificationCount }} />
     </>
   );
 };

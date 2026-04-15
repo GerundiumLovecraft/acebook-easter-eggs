@@ -1,4 +1,8 @@
-import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+} from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
 import "./App.css";
@@ -12,6 +16,7 @@ import { FriendsPage } from "./pages/Friends/FriendsPage";
 import NewPostPage from "./pages/NewPost/NewPostPage";
 import ProtectedRoute from "./layouts/ProtectedRoute";
 import MainLayout from "./layouts/MainLayout";
+import NotificationPage from "./pages/Notification/NotificationPage";
 
 function HomeRoute() {
   const token = localStorage.getItem("token");
@@ -32,7 +37,7 @@ function HomeRoute() {
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <HomeRoute />
+    element: <HomeRoute />,
   },
   {
     path: "/login",
@@ -53,7 +58,8 @@ const router = createBrowserRouter([
       { path: "posts/new", element: <NewPostPage /> },
       { path: "users/:id", element: <ProfilePage /> },
       { path: "friends", element: <FriendsPage /> },
-    ]
+      { path: "notifications", element: <NotificationPage /> },
+    ],
   },
 ]);
 
