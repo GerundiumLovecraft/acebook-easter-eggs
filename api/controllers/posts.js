@@ -2,6 +2,7 @@ const Post = require("../models/post");
 const Comment = require("../models/comment");
 const { generateToken } = require("../lib/token");
 const mongoose = require("mongoose");
+const { getIo, getUserSocketMap } = require("../socket");
 
 async function getAllPosts(req, res) {
   try {
@@ -70,6 +71,19 @@ async function likePost(req, res) {
   post.likeCount = post.likeCount + 1;
   post.likedBy.push(req.user_id);
   await post.save();
+
+  const io = getIo();
+  const userSocketMap = getUserSocketMap();
+  const postOwnerId = post.user.toString();
+  const ownerSocketId = userSocketMap[postOwnerId];
+
+  if (ownerSocketId && postOwnerId !== req.user_id) {
+    io.to(ownerSocketId).emit("notification", {
+      type: "like",
+      message: "Someone liked your post!",
+      postId: post._id
+    });
+  }
 
   const newToken = generateToken(req.user_id);
   res.status(200).json({ message: "Post liked", token: newToken });
