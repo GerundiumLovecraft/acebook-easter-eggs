@@ -70,8 +70,24 @@ export async function unlikePost(postId, token) {
 
   if (response.status !== 200) {
     throw new Error("Unable to unlike post");
+    }
+}
+
+export async function deletePost(postId, token) {
+  const requestOptions = {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+  };
+
+  const response = await fetch(`${BACKEND_URL}/posts/${postId}`, requestOptions);
+
+  if (response.status !== 200) {
+    throw new Error("Unable to delete post")
   }
 
   const data = await response.json();
   return data;
 }
+
