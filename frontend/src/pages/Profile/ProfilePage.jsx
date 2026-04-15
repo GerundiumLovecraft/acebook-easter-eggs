@@ -8,6 +8,8 @@ import Post from "../../components/Post";
 import { FriendRequestButton } from "./FriendRequestButton";
 import { friendRequestExists, sendFriendRequest } from "../../services/friendRequests"
 import { getFriendList } from "../../services/friends"
+import { SquarePen} from "lucide-react";
+import { Link } from "react-router-dom";
 
 
 export function ProfilePage() {
@@ -178,9 +180,6 @@ export function ProfilePage() {
         <>
         <button className="profile-action-button profile-action-button--primary" onClick={handleEditClick}>
             Edit Profile
-        </button>
-        <button className="profile-action-button profile-action-button--secondary">
-            Create Post
         </button>
         </>
     ) : (
