@@ -52,7 +52,6 @@ function Post({ post, token }) {
             className="post-avatar"
           />
         </Link>
-{/* /users/${c.userId ? c.userId._id.toString() === currentUserId.toString() ? "me" : c.userId._id : "me"} */}
         <div>
           <Link to={`/users/${user ? user._id.toString() === currentUserId.toString() ? "me" : user._id.toString() : "me"}`}>
             <p className="post-username">
@@ -94,7 +93,6 @@ function Post({ post, token }) {
           {comments.map((c, i) => (
             <div key={i} className="comment">
               <Link to={`/users/${c.userId ? c.userId._id.toString() === currentUserId.toString() ? "me" : c.userId._id : "me"}`}>
-              {/*  */}
                 <strong>
                   {c.userId?._id?.toString() === currentUserId?.toString()
                     ? "You"
