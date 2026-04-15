@@ -3,6 +3,7 @@ const Comment = require("../models/comment");
 const { generateToken } = require("../lib/token");
 const mongoose = require("mongoose");
 const { getIo, getUserSocketMap } = require("../socket");
+const Notification = require("../models/notification");
 
 async function getAllPosts(req, res) {
   try {
@@ -63,12 +64,21 @@ async function likePost(req, res) {
     const postOwnerId = post.user.toString();
     const ownerSocketId = userSocketMap[postOwnerId];
 
-    if (ownerSocketId && postOwnerId !== req.user_id) {
-      io.to(ownerSocketId).emit("notification", {
+    if (postOwnerId !== req.user_id) {
+      await Notification.create({
+        recipient: postOwnerId,
+        sender: req.user_id,
         type: "like",
-        message: "Someone liked your post!",
-        postId: post._id,
+        post: post._id,
       });
+
+      if (ownerSocketId) {
+        io.to(ownerSocketId).emit("notification", {
+          type: "like",
+          message: "Someone liked your post!",
+          postId: post._id,
+        });
+      }
     }
   }
 
