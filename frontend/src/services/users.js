@@ -25,6 +25,24 @@ export async function getCurrentUser(token) {
     return response.json();
 }
 
+export async function searchUser(token, name) {
+
+    const response = await fetch(`${BACKEND_URL}/users/search?name=${name}`, {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error("Server error")
+    };
+
+    return data.users;
+};
+
 export async function updateCurrentUser(updates, token) {
     const response = await fetch(`${BACKEND_URL}/users/me`, {
         method: "PATCH",

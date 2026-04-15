@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import LogoutButton from "./LogoutButton";
+import SearchBar from "./SearchBar";
 import "./NavBar.css";
-import { House, SquarePen, Users, Bell, User, Search, Star } from "lucide-react";
+import { House, SquarePen, Users, Bell, User, Star } from "lucide-react";
 
 function NavBar({ notificationCount }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -27,11 +28,7 @@ function NavBar({ notificationCount }) {
       </Link>
 
       <div className="navbar-right">
-        <div className="navbar-search-wrapper">
-          <Search size={16} className="search-icon" />
-          <input type="text" placeholder="Search..." className="navbar-search" />
-        </div>
-
+        <SearchBar />
         <div className="navbar-links">
           <Link to="/posts">
             <House size={18} /> Home

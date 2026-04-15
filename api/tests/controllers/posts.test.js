@@ -431,6 +431,10 @@ describe("/posts", () => {
       const secondUser = new User({
         email: "second-test-user@test.com",
         password: "1234makers",
+        profile: {
+          firstName: "Mister",
+          lastName: "Twister",
+        },
       });
       await secondUser.save();
 
