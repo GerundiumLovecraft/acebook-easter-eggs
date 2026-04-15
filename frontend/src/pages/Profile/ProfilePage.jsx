@@ -1,3 +1,4 @@
+import "./ProfilePage.css";
 import { useParams, useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react";
 import { getUser, getCurrentUser, updateCurrentUser } from "../../services/users";
@@ -141,51 +142,87 @@ export function ProfilePage() {
     const { firstName, lastName, profilePic } = profile.profile;
 
     const nameSection = isEditing ? (
-        <>
-            <input name="firstName" value={formData.firstName} onChange={handleChange} />
-            <input name="lastName" value={formData.lastName} onChange={handleChange} />
-        </>
+            <div className="profile-name-fields">
+                <input name="firstName" value={formData.firstName} onChange={handleChange} />
+                <input name="lastName" value={formData.lastName} onChange={handleChange} />
+            </div>
         ) : (
-            <h1>{firstName} {lastName}</h1>
+            <h1 className="profile-name">{firstName} {lastName}</h1>
         );
 
     const emailSection = isEditing ? (
+        <div className="profile-edit-fields">
             <input name="email" value={formData.email} onChange={handleChange} />
-        ) : (
-            <p>Email: {email}</p>
-        );
+        </div>
+    ) : (
+        <p className="profile-email">Email: {email}</p>
+    );
 
     const actionButtons = isEditing ? (
     <>
-        {isSaving ? <button disabled={true}>Saving...</button> : <button onClick={handleSaveClick}>Save</button>}
-        <button onClick={handleCancelClick}>Cancel</button>
+        {isSaving ? (
+        <button className="profile-action-button profile-action-button--primary" disabled={true}>
+            Saving...
+        </button>
+        ) : (
+        <button className="profile-action-button profile-action-button--primary" onClick={handleSaveClick}>
+            Save
+        </button>
+        )}
+        <button className="profile-action-button profile-action-button--secondary" onClick={handleCancelClick}>
+        Cancel
+        </button>
     </>
     ) : (
-        isOwnProfile ? <> 
-        <button onClick={handleEditClick}>Edit Profile</button> 
-        <button>Create Post</button> </> 
-        : <FriendRequestButton
-            status={friendshipStatus}
-            isSaving={isSendingFriendRequest}
-            onAddFriend={handleSendFriendRequest}
+    isOwnProfile ? (
+        <>
+        <button className="profile-action-button profile-action-button--primary" onClick={handleEditClick}>
+            Edit Profile
+        </button>
+        <button className="profile-action-button profile-action-button--secondary">
+            Create Post
+        </button>
+        </>
+    ) : (
+        <FriendRequestButton
+        status={friendshipStatus}
+        isSaving={isSendingFriendRequest}
+        onAddFriend={handleSendFriendRequest}
         />
     )
+    );
 
-    return (
+return (
         <>
-        <div>
-            <img src={profilePic}/>
-            {nameSection}
-            {emailSection}
-            <p>Joined: {formatCreatedAt(createdAt)}</p>
-            <p>Active: {formatLastUpdated(updatedAt)}</p>
-            {actionButtons}
-        </div>
-        <h2>Posts</h2>
-            <div className="feed" role="feed">
-                {posts.map((post) => (
-                <Post post={post} key={post._id} token={token} />
-                ))}
+            <div className="profile-page">
+                <div className="profile-card">
+                    <div className="profile-header">
+                        <img className="profile-avatar" src={profilePic} />
+                        <div className="profile-heading">
+                            {nameSection}
+                            {emailSection}
+                        </div>
+                    </div>
+
+                    {saveError && <p className="profile-error">{saveError}</p>}
+
+                    <div className="profile-meta">
+                        <p>Joined: {formatCreatedAt(createdAt)}</p>
+                        <p>Active: {formatLastUpdated(updatedAt)}</p>
+                    </div>
+
+                    <div className="profile-actions">
+                        {actionButtons}
+                    </div>
+                </div>
+
+                <h2 className="profile-posts-title">Posts</h2>
+
+                <div className="feed" role="feed">
+                    {posts.map((post) => (
+                        <Post post={post} key={post._id} token={token} />
+                    ))}
+                </div>
             </div>
         </>
     );
