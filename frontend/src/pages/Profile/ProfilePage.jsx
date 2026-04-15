@@ -8,8 +8,6 @@ import Post from "../../components/Post";
 import { FriendRequestButton } from "./FriendRequestButton";
 import { friendRequestExists, sendFriendRequest } from "../../services/friendRequests"
 import { getFriendList } from "../../services/friends"
-import { SquarePen} from "lucide-react";
-import { Link } from "react-router-dom";
 
 
 export function ProfilePage() {
