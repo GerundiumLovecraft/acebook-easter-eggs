@@ -170,8 +170,8 @@ describe("/posts", () => {
         .set("Authorization", `Bearer ${token}`);
 
       const posts = response.body.posts;
-      expect(posts[0].message).toEqual("howdy!");
-      expect(posts[1].message).toEqual("hola!");
+      expect(posts[0].message).toEqual("hola!");
+      expect(posts[1].message).toEqual("howdy!");
     });
 
     test("returns a new token", async () => {

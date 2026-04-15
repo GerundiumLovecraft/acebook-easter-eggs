@@ -6,15 +6,15 @@ const { getIo, getUserSocketMap } = require("../socket");
 
 async function getAllPosts(req, res) {
   try {
-    const posts = await Post.find().sort({createdAt: -1}).populate('user');
+    const posts = await Post.find().sort({ createdAt: -1 }).populate("user");
     const postWithCounts = await Promise.all(
-      posts.map( async (post) => {
-        const commentCount = await Comment.countDocuments({postId: post._id});
-        return {...post.toObject(), commentCount};
-      })
+      posts.map(async (post) => {
+        const commentCount = await Comment.countDocuments({ postId: post._id });
+        return { ...post.toObject(), commentCount };
+      }),
     );
     const token = generateToken(req.user_id);
-    res.status(200).json({posts: postWithCounts, token: token})
+    res.status(200).json({ posts: postWithCounts, token: token });
   } catch (err) {
     console.log(`Error: ${err}`);
     res.status(500).json({ message: "You've stumbled upon a server error" });
@@ -30,20 +30,21 @@ async function createPost(req, res) {
     }
 
     const post = new Post({
-    message: req.body.message,
-    image: req.body.image ? req.body.image : "",
-    user: UID,
+      message: req.body.message,
+      image: req.body.image ? req.body.image : "",
+      user: UID,
     });
 
     await post.save();
 
     const newToken = generateToken(req.user_id);
-    res.status(201).json({ message: "Post created", post: post, token: newToken });
-
+    res
+      .status(201)
+      .json({ message: "Post created", post: post, token: newToken });
   } catch (err) {
     console.log("Create Post Error:", err);
     res.status(500).json({ message: "Internal server error" });
-  };
+  }
 }
 
 async function likePost(req, res) {
@@ -57,15 +58,18 @@ async function likePost(req, res) {
 
   const io = getIo();
   const userSocketMap = getUserSocketMap();
-  const postOwnerId = post.user.toString();
-  const ownerSocketId = userSocketMap[postOwnerId];
 
-  if (ownerSocketId && postOwnerId !== req.user_id) {
-    io.to(ownerSocketId).emit("notification", {
-      type: "like",
-      message: "Someone liked your post!",
-      postId: post._id
-    });
+  if (post.user) {
+    const postOwnerId = post.user.toString();
+    const ownerSocketId = userSocketMap[postOwnerId];
+
+    if (ownerSocketId && postOwnerId !== req.user_id) {
+      io.to(ownerSocketId).emit("notification", {
+        type: "like",
+        message: "Someone liked your post!",
+        postId: post._id,
+      });
+    }
   }
 
   const newToken = generateToken(req.user_id);
@@ -117,25 +121,29 @@ async function deletePostById(req, res) {
   try {
     const postId = req.params.id;
     if (!mongoose.Types.ObjectId.isValid(postId)) {
-      return res.status(404).json({message: "Invalid post ID format. Please use a valid MongoDB ObjectId"});
+      return res.status(404).json({
+        message: "Invalid post ID format. Please use a valid MongoDB ObjectId",
+      });
     }
 
     const postFound = await Post.findById(postId);
-    
+
     if (!postFound) {
-      return res.status(404).json({message: "Post not found"});
+      return res.status(404).json({ message: "Post not found" });
     }
 
     if (req.user_id !== postFound.user.toString()) {
-      return res.status(403).json({message: "Not authorised to delete the post"})
+      return res
+        .status(403)
+        .json({ message: "Not authorised to delete the post" });
     }
 
-    const postDeleted = await Post.deleteOne({_id: postId});
+    const postDeleted = await Post.deleteOne({ _id: postId });
 
-    res.status(200).json({message: "Post successfully deleted", postDeleted});
+    res.status(200).json({ message: "Post successfully deleted", postDeleted });
   } catch (error) {
     console.error(error);
-    res.status(400).json({message: "Something went wrong"})
+    res.status(400).json({ message: "Something went wrong" });
   }
 }
 
