@@ -21,7 +21,7 @@ const { email, password, firstName, lastName } = req.body;
 
 async function getCurrentUser(req, res) {
   try {
-    const user = await User.findById(req.user_id).select("-password");
+    const user = await User.findById(req.user_id).select("-password");;
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -54,10 +54,50 @@ async function getProfile(req, res) {
   }
 };
 
+async function updateCurrentUser(req, res) {
+  try {
+      const fieldMap = {
+        email: "email",
+        firstName: "profile.firstName",
+        lastName: "profile.lastName",
+        bio: "profile.bio",
+        profilePic: "profile.profilePic",
+      };
+
+      const updates = {};
+
+      Object.entries(fieldMap).forEach(([bodyField, dbField]) => {
+        if (req.body[bodyField] !== undefined) {
+          updates[dbField] = req.body[bodyField];
+        }
+      });
+
+        if (Object.keys(updates).length === 0) {
+          return res.status(400).json({ message: "No valid fields provided to update" });
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(
+          req.user_id,
+          { $set: updates }, //$set updates/adds a field if it doesnt exist
+          { returnDocument: "after", runValidators: true } // validators make sure you cant update a field that doesnt match the schema
+        ).select("-password")
+
+    return res.status(200).json({message: "User updated successfully", user: updatedUser})
+  } catch (error) {
+    console.log(error)
+
+      if (error.code === 11000) { //11000 is a mongoDb dupe key/email error
+      return res.status(400).json({ message: "Email already in use" });
+    }
+    return res.status(500).json({ message: "Server error" });
+  }
+}
+
 const UsersController = {
   create: create,
   getCurrentUser: getCurrentUser,
-  getProfile: getProfile
+  updateCurrentUser: updateCurrentUser,
+  getProfile: getProfile,
 };
 
 module.exports = UsersController; 

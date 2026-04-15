@@ -242,6 +242,101 @@ describe("/users", () => {
       expect(response.body.password).toBeUndefined();
     });
   });
+  describe("PATCH /users/me", () => {
+  test("updates a single field for the current user", async () => {
+    const { token, user } = await createUserAndLogin({
+      email: "updateone@email.com",
+      password: "1234",
+      firstName: "Bob",
+      lastName: "Smith",
+    });
+
+    const response = await request(app)
+      .patch("/users/me")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ firstName: "Robert" });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body.message).toEqual("User updated successfully");
+    expect(response.body.user.email).toEqual("updateone@email.com");
+    expect(response.body.user.profile.firstName).toEqual("Robert");
+    expect(response.body.user.profile.lastName).toEqual("Smith");
+    expect(response.body.user.password).toBeUndefined();
+
+    const updatedUserInDb = await User.findById(user._id);
+    expect(updatedUserInDb.profile.firstName).toEqual("Robert");
+    expect(updatedUserInDb.profile.lastName).toEqual("Smith");
+  });
+
+  test("updates multiple fields for the current user", async () => {
+    const { token, user } = await createUserAndLogin({
+      email: "updatemany@email.com",
+      password: "1234",
+      firstName: "Bob",
+      lastName: "Smith",
+    });
+
+    const response = await request(app)
+      .patch("/users/me")
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        email: "updated@email.com",
+        firstName: "Robert",
+        lastName: "Jones",
+      });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body.message).toEqual("User updated successfully");
+    expect(response.body.user.email).toEqual("updated@email.com");
+    expect(response.body.user.profile.firstName).toEqual("Robert");
+    expect(response.body.user.profile.lastName).toEqual("Jones");
+    expect(response.body.user.password).toBeUndefined();
+
+    const updatedUserInDb = await User.findById(user._id);
+    expect(updatedUserInDb.email).toEqual("updated@email.com");
+    expect(updatedUserInDb.profile.firstName).toEqual("Robert");
+    expect(updatedUserInDb.profile.lastName).toEqual("Jones");
+  });
+
+  test("returns 400 when no valid fields are provided", async () => {
+    const { token } = await createUserAndLogin({
+      email: "novalidfields@email.com",
+      password: "1234",
+    });
+
+    const response = await request(app)
+      .patch("/users/me")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ favouriteColour: "blue" });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body.message).toEqual("No valid fields provided to update");
+  });
+
+  test("returns 400 when trying to update email to one that already exists", async () => {
+    await createUserAndLogin({
+      email: "existing@email.com",
+      password: "1234",
+      firstName: "Existing",
+      lastName: "User",
+    });
+
+    const { token } = await createUserAndLogin({
+      email: "second@email.com",
+      password: "1234",
+      firstName: "Second",
+      lastName: "User",
+    });
+
+    const response = await request(app)
+      .patch("/users/me")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ email: "existing@email.com" });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body.message).toEqual("Email already in use");
+  });
+});
 });
 
 
