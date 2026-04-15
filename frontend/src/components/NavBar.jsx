@@ -5,7 +5,7 @@ import SearchBar from "./SearchBar";
 import "./NavBar.css";
 import { House, SquarePen, Users, Bell, User, Star } from "lucide-react";
 
-function NavBar() {
+function NavBar({ notificationCount }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -13,11 +13,11 @@ function NavBar() {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setMenuOpen(false);
+      }
     }
-  }
 
-  document.addEventListener("mousedown", handleClickOutside);
-  return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
@@ -40,7 +40,28 @@ function NavBar() {
             <Users size={18} /> Friends
           </Link>
           <Link to="/notifications">
-            <Bell size={18} /> Notifications
+            <div style={{ position: "relative", display: "inline-flex", alignItems: "center" }}>
+              <Bell size={18} />
+              {notificationCount > 0 && (
+                <span style={{
+                  position: "absolute",
+                  top: "-8px",
+                  left: "-8px",
+                  background: "#ef4444",
+                  color: "white",
+                  borderRadius: "50%",
+                  width: "16px",
+                  height: "16px",
+                  fontSize: "10px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}>
+                  {notificationCount}
+                </span>
+              )}
+            </div>
+            Notifications
           </Link>
         </div>
 
