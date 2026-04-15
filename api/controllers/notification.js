@@ -29,9 +29,24 @@ async function markAsRead(req, res) {
   }
 }
 
+async function getUnreadCount(req, res) {
+  try {
+    const count = await Notification.countDocuments({
+      recipient: req.user_id,
+      read: false
+    });
+
+    const newToken = generateToken(req.user_id);
+    res.status(200).json({ count, token: newToken });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
 const NotificationController = {
   getNotifications,
   markAsRead,
+  getUnreadCount,
 };
 
 module.exports = NotificationController;

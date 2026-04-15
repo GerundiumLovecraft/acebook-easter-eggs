@@ -138,6 +138,32 @@ async function addComment(req, res) {
 
     await comment.save();
 
+    const post = await Post.findById(req.params.id);
+    const io = getIo();
+    const userSocketMap = getUserSocketMap();
+
+    if (post.user) {
+      const postOwnerId = post.user.toString();
+      const ownerSocketId = userSocketMap[postOwnerId];
+
+      if (postOwnerId !== req.user_id) {
+        await Notification.create({
+          recipient: postOwnerId,
+          sender: req.user_id,
+          type: "comment",
+          post: post._id,
+        });
+
+        if (ownerSocketId) {
+          io.to(ownerSocketId).emit("notification", {
+            type: "comment",
+            message: "Someone commente on your post",
+            postId: post._id,
+          });
+        }
+      }
+    }
+
     res.status(201).json({ message: "Comment added" });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -182,7 +208,6 @@ const PostsController = {
   getComments: getComments,
   addComment: addComment,
   deletePostById: deletePostById,
-  likePost: likePost,
   getPostsByUserId: getPostsByUserId
 };
 
