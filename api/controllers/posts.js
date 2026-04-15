@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 
 async function getAllPosts(req, res) {
   try {
-    const posts = await Post.find().populate('user');
+    const posts = await Post.find().sort({createdAt: -1}).populate('user');
     const postWithCounts = await Promise.all(
       posts.map( async (post) => {
         const commentCount = await Comment.countDocuments({postId: post._id});
