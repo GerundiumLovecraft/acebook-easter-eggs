@@ -1,11 +1,13 @@
-import { friendRequestExists, sendFriendRequestResponse } from "../../services/friendRequests"
+import { friendRequestExists, sendFriendRequestResponse, sendFriendRequest } from "../../services/friendRequests"
 import { getFriendList } from "../../services/friends"
 import { useState, useEffect } from "react";
 
-export function FriendRequestButton(token, profilePageId) {
+export function FriendRequestButton({token, profilePageId}) {
     const [isFriend, setIsFriend] = useState(false)
-    const [friendRequest, setFriendRequested] = useState(false)
+    const [friendRequested, setFriendRequested] = useState(false)
     const [isSaving, setIsSaving] = useState(false)
+
+    console.log(profilePageId, '<--profilePageId in FriendRequestButton')
 
     useEffect(() => {
         Promise.all([
@@ -29,11 +31,21 @@ export function FriendRequestButton(token, profilePageId) {
         setIsSaving(true)
         try {
             const token = localStorage.getItem("token");
-            sendRequest
+            console.log(profilePageId, '<----profilePageId in handleAddFriend')
+            const result = sendFriendRequest(token, profilePageId)
+            console.log(result, '<---result from friend request')
+            setFriendRequested(true)
+        } catch (error) {
+            console.log(error)
+            setFriendRequested(false)
+        } finally {
+            setIsSaving(false)
         }
     }
 
+    console.log(friendRequested, '<---friendRequested')
+
     return (
-        <button>Add friend</button>
+        <button onClick={handleAddFriend}>Add friend</button>
     )
 }

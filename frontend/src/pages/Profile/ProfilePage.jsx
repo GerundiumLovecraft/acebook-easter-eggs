@@ -117,6 +117,8 @@ export function ProfilePage() {
             <p>Email: {email}</p>
         );
 
+    console.log(id, '<---id in ProfilePage')
+
     const actionButtons = isEditing ? (
     <>
         {isSaving ? <button disabled={true}>Saving...</button> : <button onClick={handleSaveClick}>Save</button>}
