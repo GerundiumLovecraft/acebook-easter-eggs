@@ -60,54 +60,70 @@ export function SignupPage() {
   }
 
   return (
-    <div className="signup-container">
-    <h1>Welcome in!</h1>
-      <h2>Signup</h2>
+  <div className="signup-page">
+    <div className="signup-card">
+
+      <div className="signup-header">
+        <h2>Create an account</h2>
+        <p>Enter your details below to get started</p>
+        <Link to="/login" className="login-link">Already have an account?</Link>
+      </div>
+
       {errorMessage && <p className="errorMessage">{errorMessage}</p>}
+
       <form className="signup-form" onSubmit={handleSubmit}>
-      <label className="signup-label" htmlFor="firstName">First name: </label>
-        <input className="signup-field"
-          id="firstName"
-          type="text"
-          value={firstName}
-          onChange={handleFirstNameChange}
-        />
-        <br />
-        <label className="signup-label" htmlFor="lastName">Last name: </label>
-        <input className="signup-field"
-          id="lastName"
-          type="text"
-          value={lastName}
-          onChange={handleLastNameChange}
-        />
-        <br />
-        <label className="signup-label" htmlFor="email">Email: </label>
-        <input className="signup-field"
-          id="email"
-          type="text"
-          value={email}
-          onChange={handleEmailChange}
-        />
-        <br />
-        <label className="signup-label" htmlFor="password">Password: </label>
-        <input className="signup-field"
-          id="password"
-          type="password"
-          value={password}
-          onChange={handlePasswordChange}
-        />
-        <br />
-        <label className="signup-label" htmlFor="confirmPassword">Re-enter Password: </label>
-        <input className="signup-field"
-          id="confirmPassword"
-          type="password"
-          value={confirmPassword}
-          onChange={handleConfirmPasswordChange}
-        />
-        <br />
-        <input role="submit-button" id="submit" type="submit" value="Submit" />
+
+        <div className="form-group">
+          <label>First Name</label>
+          <input
+            type="text"
+            value={firstName}
+            onChange={handleFirstNameChange}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Last Name</label>
+          <input
+            type="text"
+            value={lastName}
+            onChange={handleLastNameChange}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Email</label>
+          <input
+            type="email"
+            value={email}
+            onChange={handleEmailChange}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Password</label>
+          <input
+            type="password"
+            value={password}
+            onChange={handlePasswordChange}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Confirm Password</label>
+          <input
+            type="password"
+            value={confirmPassword}
+            onChange={handleConfirmPasswordChange}
+          />
+        </div>
+
+        <button type="submit" className="signup-btn">
+          Sign Up
+        </button>
+
       </form>
-      <Link to="/login">Already part of Acebook? Log in here!</Link>
     </div>
+  </div>
   );
 }
