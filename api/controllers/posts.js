@@ -4,9 +4,20 @@ const { generateToken } = require("../lib/token");
 const mongoose = require("mongoose");
 
 async function getAllPosts(req, res) {
-  const posts = await Post.find().populate('user');
-  const token = generateToken(req.user_id);
-  res.status(200).json({ posts: posts, token: token });
+  try {
+    const posts = await Post.find().populate('user');
+    const postWithCounts = await Promise.all(
+      posts.map( async (post) => {
+        const commentCount = await Comment.countDocuments({postId: post._id});
+        return {...post.toObject(), commentCount};
+      })
+    );
+    const token = generateToken(req.user_id);
+    res.status(200).json({posts: postWithCounts, token: token})
+  } catch (err) {
+    console.log(`Error: ${err}`);
+    res.status(500).json({ message: "You've stumbled upon a server error" });
+  }
 }
 
 async function createPost(req, res) {
