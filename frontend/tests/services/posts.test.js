@@ -1,7 +1,7 @@
 import createFetchMock from "vitest-fetch-mock";
-import { describe, expect, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 
-import { getPosts } from "../../src/services/posts";
+import { deletePost, getPosts } from "../../src/services/posts";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -40,4 +40,21 @@ describe("posts service", () => {
       }
     });
   });
+
+  describe("deletePost", () => {
+    test("sends the requests to delete the post with correct token and post Id", async () => {
+      fetch.mockResponseOnce(JSON.stringify({ message: "Post successfully deleted" }), {
+        status: 200,
+      });
+      await deletePost("test_post_id", "testToken");
+
+      const fetchArguments = fetch.mock.lastCall;
+      const url = fetchArguments[0];
+      const options = fetchArguments[1];
+
+      expect(url).toEqual(`${BACKEND_URL}/posts/test_post_id`);
+      expect(options.method).toEqual("DELETE");
+      expect(options.headers["Authorization"]).toEqual("Bearer testToken");
+    })
+  })
 });
