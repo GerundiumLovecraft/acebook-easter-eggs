@@ -410,4 +410,55 @@ describe("/posts", () => {
       expect(updatedPost.likeCount).toEqual(1);
     });
   });
+  
+  describe("DELETE post, when token is present", () => {
+    test("the response code 200 when deleting post that user own", async () => {
+      const post = new Post({
+        message: "Post to be deleted",
+        user: userId
+      });
+      await post.save();
+
+      const response = await request(app)
+        .delete(`/posts/${post._id}`)
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.status).toEqual(200);
+      expect(response.body.message).toEqual("Post successfully deleted");
+    });
+
+    test("the response code 403 when deleting post not own by the user ", async () => {
+      const secondUser = new User({
+        email: "second-test-user@test.com",
+        password: "1234makers",
+      });
+      await secondUser.save();
+
+      const secondUserId = secondUser._id;
+
+      const post = new Post({
+        message: "Post from second user",
+        user: secondUserId
+      });
+      await post.save();
+
+      const response = await request(app)
+        .delete(`/posts/${post._id}`)
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.status).toEqual(403);
+      expect(response.body.message).toEqual("Not authorised to delete the post");
+    
+    });
+
+    test("the response code 404 when deleting a non existing post", async () => {
+      const nonExistingPostId = "69d63ea17d5c631933764ae7"
+      const response = await request(app)
+        .delete(`/posts/${nonExistingPostId}`)
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.status).toEqual(404);
+      expect(response.body.message).toEqual("Post not found");
+    })
+  });
 });
