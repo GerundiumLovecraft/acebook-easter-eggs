@@ -5,36 +5,63 @@
   padding: 10px 24px;
   width: 100%;
   box-sizing: border-box;
-  background-color: rgb(0, 0, 0);
-  border-bottom: 2px solid #464848;
+  background-color: #eceeef;
+  border-bottom: 1px solid #e3e6e7;
   position: relative;
 }
 
+.navbar-search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+  color: #9ca3af;
+  pointer-events: none;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
 .navbar-search {
-  padding: 8px 12px;
-  border: 1px solid #d1d5db;
+  padding: 8px 12px 8px 32px;
+  border: 1px solid #e0dedd;
   border-radius: 8px;
   width: 250px;
   outline: none;
+  background-color: white;
+  color: #2f4565;
+  font-size: 14px;
+}
+
+.navbar-search:focus {
+  border-color: #1877f2;
 }
 
 .navbar-links {
   display: flex;
-  gap: 50px;
-  justify-content: center;
-  left: 50%;
-  transform: translateX(-50%);
-  position: absolute;
+  gap: 24px;
 }
 
 .navbar-links a {
   text-decoration: none;
-  color: #fafcff;
+  color: #050606;
   font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
 }
 
 .navbar-links a:hover {
-  color: #175ef8;
+  color: #1877f2;
 }
 
 .navbar-profile {
@@ -44,10 +71,14 @@
 .profile-button {
   display: flex;
   align-items: center;
-  gap: 4px;
-  background: none;
+  justify-content: center;
+  background: #466486;
   border: none;
   cursor: pointer;
+  color: #ede8de;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
 }
 
 .profile-icon {
@@ -66,32 +97,48 @@
 .dropdown-menu {
   position: absolute;
   right: 0;
+  left: auto;
+  transform: none;
   top: 50px;
-  background: #000000;
-  border-radius: 5px;
-  box-shadow: 0 4px 12px rgb(0, 0, 0, 1);
+  background:#f4f5f8;
+  border-radius: 8px;
+  border: 1px solid #cecfd3;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  min-width: 15px;
+  min-width: 160px;
   z-index: 100;
-  gap: 10px;
+  padding: 8px 0;
 }
 
 .dropdown-menu a {
-  padding: 10px 16px;
+  padding: 10px 20px;
   text-decoration: none;
-  color: #ffffff;
-  font-size: 14px;
+  color: black;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px
 }
 
 .dropdown-menu a:hover {
-  color: #175ef8;
+  color: #1877f2;
 }
 
 .dropdown-menu .logout {
-  color: #fffefe;
-  background-color: rgb(0, 0, 0);
+  padding: 10px 20px;
+  color: black;
+  background-color: transparent;
   border: none;
+  font-size: 13px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: inherit;
+  white-space: nowrap;
 }
 
 .dropdown-menu .logout:hover {
@@ -107,4 +154,16 @@
 .logout {
   display: flex;
   gap: 10px;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-text {
+  font-weight: 500;
+  font-size: 18px;
+  color: #1c1e21;
 }

@@ -3,6 +3,7 @@ import LikeButton from "./LikeButton";
 import { useState, useEffect } from "react";
 import { getComments, addComment } from "../services/comments";
 import { jwtDecode } from "jwt-decode";
+import { MessageCircle } from "lucide-react"
 import { Link } from "react-router-dom";
 
 function Post({ post, token }) {
@@ -82,7 +83,8 @@ function Post({ post, token }) {
         />
         
         <button onClick={() => setShowComments(!showComments)}>
-          💬 Comment ({showComments ? comments.length : post.commentCount})
+          <MessageCircle size={18} color="#666" />
+          Comment ({showComments ? comments.length : post.commentCount})
         </button>
       </div>
 
