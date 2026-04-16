@@ -1,5 +1,5 @@
+import { Link } from "react-router-dom";
 import "./Friends.css";
-
 function FriendRequests({ friendRequestsObj, requestReponseHandler }) {
 
     let outgoingRequests = friendRequestsObj.outgoing;
@@ -16,18 +16,20 @@ return (
         ) : (
           <ul>
             {incomingRequests.map((req) => (
-              <li key={req.from.id} className="request-item">
-                
-                <div className="request-left">
-                  <img
-                    className="friend-pic"
-                    src={req.from.profile.profilePic}
-                    alt=""
-                  />
-                  <p className="friend-name">
-                    {req.from.profile.firstName} {req.from.profile.lastName}
-                  </p>
-                </div>
+              <li key={req.from._id} className="request-item">
+
+                <Link to={`/users/${req.from._id}`}>
+                    <div className="request-left">
+                    <img
+                        className="friend-pic"
+                        src={req.from.profile.profilePic}
+                        alt=""
+                    />
+                    <p className="friend-name">
+                        {req.from.profile.firstName} {req.from.profile.lastName}
+                    </p>
+                    </div>
+                </Link>
 
                 <div className="request-actions">
                   <button
@@ -64,19 +66,20 @@ return (
         ) : (
           <ul>
             {outgoingRequests.map((req) => (
-              <li key={req.to.id} className="request-item">
-
-                <div className="request-left">
-                  <img
-                    className="friend-pic"
-                    src={req.to.profile.profilePic}
-                    alt=""
-                  />
-                  <p className="friend-name">
-                    {req.to.profile.firstName} {req.to.profile.lastName}
-                  </p>
-                </div>
-
+              <li key={req.to._id} className="request-item">
+                
+                <Link to={`/users/${req.to._id}`}>
+                    <div className="request-left">
+                    <img
+                        className="friend-pic"
+                        src={req.to.profile.profilePic}
+                        alt=""
+                    />
+                    <p className="friend-name">
+                        {req.to.profile.firstName} {req.to.profile.lastName}
+                    </p>
+                    </div>
+                </Link>
                 <span className="pending-text">Pending</span>
 
               </li>

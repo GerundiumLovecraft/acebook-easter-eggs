@@ -12,9 +12,9 @@ function FriendList({ friendList }) {
         ) : (
             <ul>
             {friendList.map((friend) => (
-                <li key={friend.id} className="friend-item">
+                <li key={friend._id} className="friend-item">
 
-                <Link to={`/users/${friend.id}`} className="friend-link">
+                <Link to={`/users/${friend._id}`} className="friend-link">
                     <img
                     className="friend-pic"
                     src={friend.profile.profilePic}
