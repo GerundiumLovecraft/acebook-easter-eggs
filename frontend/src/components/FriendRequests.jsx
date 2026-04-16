@@ -1,8 +1,5 @@
 import { Link } from "react-router-dom";
 import "./Friends.css";
-
-import { Link } from "react-router-dom";
-
 function FriendRequests({ friendRequestsObj, requestReponseHandler }) {
 
     let outgoingRequests = friendRequestsObj.outgoing;
