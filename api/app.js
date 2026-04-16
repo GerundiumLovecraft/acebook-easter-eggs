@@ -8,6 +8,7 @@ const authenticationRouter = require("./routes/authentication");
 const friendRequestsRouter = require("./routes/friendRequests");
 const friendsRouter = require("./routes/friends");
 const tokenChecker = require("./middleware/tokenChecker");
+const notificationRouter = require("./routes/notification");
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use("/posts", tokenChecker, postsRouter);
 app.use("/tokens", authenticationRouter);
 app.use("/friend_requests", tokenChecker, friendRequestsRouter);
 app.use("/friends", tokenChecker, friendsRouter);
+app.use("/notifications", tokenChecker, notificationRouter);
 
 // 404 Handler
 app.use((_req, res) => {
