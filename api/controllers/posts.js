@@ -1,3 +1,4 @@
+const User = require("../models/user")
 const Post = require("../models/post");
 const Comment = require("../models/comment");
 const { generateToken } = require("../lib/token");
@@ -10,7 +11,8 @@ async function getAllPosts(req, res) {
     const filter = req.query.filter;
     let query = {};
     if (filter === 'friends') {
-      query = { user: { $in: req.user.social.friendList } };
+      const user = await User.findById(req.user_id);
+      query = { user: { $in: user.social.friendList } };
     }
 
     const posts = await Post.find(query).sort({createdAt: -1}).populate('user');

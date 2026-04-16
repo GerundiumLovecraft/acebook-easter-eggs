@@ -25,3 +25,7 @@
 .login-label {
     float: left;
 }
+
+.error-message {
+    color: rgb(251, 57, 57);
+}

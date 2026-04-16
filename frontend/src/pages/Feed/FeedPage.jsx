@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { getPosts } from "../../services/posts";
 import Post from "../../components/Post";
+import "./FeedPage.css";
 
 export function FeedPage() {
   const [posts, setPosts] = useState([]);
@@ -32,10 +33,10 @@ export function FeedPage() {
     <>
       <h2>Posts</h2>
       <div className="filter-control">
-        <button onClick={() => setFilter("all")}>
+        <button onClick={() => setFilter("all")} className={filter === "all" ? "active" : "inactive"}>
           All posts
         </button>
-        <button onClick={() => setFilter("friends")}>          
+        <button onClick={() => setFilter("friends")} className={filter === "friends" ? "active" : "inactive"}>
           Friends posts
         </button>
       </div>

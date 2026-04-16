@@ -8,6 +8,7 @@ import "./LoginPage.css"
 export function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   async function handleSubmit(event) {
@@ -18,7 +19,7 @@ export function LoginPage() {
       navigate("/posts");
     } catch (err) {
       console.error(err);
-      navigate("/login");
+      setErrorMessage("Invalid email or password.");
     }
   }
 
@@ -34,6 +35,7 @@ export function LoginPage() {
     <div className="login-container">
       <h1>Welcome back!</h1>
       <h2>Login</h2>
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
       <form className="login-form" onSubmit={handleSubmit}>
         <label className="login-label" htmlFor="email">Email:</label>
         <input className="login-field"
