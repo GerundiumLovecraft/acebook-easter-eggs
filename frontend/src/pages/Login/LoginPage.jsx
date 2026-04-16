@@ -32,30 +32,47 @@ export function LoginPage() {
   }
 
   return (
-    <div className="login-container">
-      <h1>Welcome back!</h1>
-      <h2>Login</h2>
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
-      <form className="login-form" onSubmit={handleSubmit}>
-        <label className="login-label" htmlFor="email">Email:</label>
-        <input className="login-field"
-          id="email"
-          type="text"
-          value={email}
-          onChange={handleEmailChange}
-        />
-        <br />
-        <label className="login-label" htmlFor="password">Password:</label>
-        <input className="login-field"
-          id="password"
-          type="password"
-          value={password}
-          onChange={handlePasswordChange}
-        />
-        <br />
-        <input role="submit-button" id="submit" type="submit" value="Submit" />
-      </form>
-      <Link to="/signup">New to Acebook? Sign up here!</Link>
+    <div className="login-page">
+      <div className="login-card">
+        
+        <div className="login-header">
+          <h2>Login to your account</h2>
+          <p>Enter your email below to login to your account</p>
+          <Link to="/signup" className="signup-link">Sign Up</Link>
+        </div>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
+        <form className="login-form" onSubmit={handleSubmit}>
+          
+          <div className="form-group">
+            <label>Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={handleEmailChange}
+              placeholder="m@example.com"
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <div className="password-row">
+              <label>Password</label>
+            </div>
+            <input
+              type="password"
+              value={password}
+              placeholder="* * * * * * * *"
+              onChange={handlePasswordChange}
+              required
+            />
+          </div>
+
+          <button type="submit" className="login-btn">
+            Login
+          </button>
+
+        </form>
+      </div>
     </div>
   );
 }

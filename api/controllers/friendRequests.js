@@ -100,7 +100,11 @@ async function sendResponse(req, res) {
             return res.status(401).json({ message: "unauthorised user"});
         }
 
+        // Update the status of the request
         friendRequest.status = updatedStatus;
+
+        // Create new token
+        const newToken = generateToken(req.user_id);
 
         if (updatedStatus === 'approved') {
             const fromUser = friendRequest.from;
@@ -115,10 +119,19 @@ async function sendResponse(req, res) {
                 friendRequest.save()
             ]);
 
-            res.status(200).json({ message: "Request accepted" })
+            const fromUserData = {
+                _id: fromUser._id,
+                profile: {
+                    firstName: fromUser.profile.firstName,
+                    lastName: fromUser.profile.lastName,
+                    profilePic: fromUser.profile.profilePic,
+                }
+            }
+
+            res.status(200).json({ message: "Request accepted", newFriend: fromUserData, token: newToken })
         } else if (updatedStatus === 'rejected') {
             await friendRequest.save();
-            res.status(200).json({ message: "Request rejected" });
+            res.status(200).json({ message: "Request rejected", token: newToken });
         }        
     } catch (error) {
         console.log(error);
@@ -135,19 +148,24 @@ async function friendRequestExists(req, res) {
         // Look for for the friend request
         const requestExists = await FriendRequest.findOne({
             $or: [{ from: fromUID, to: toUID }, { from: toUID, to: fromUID }],
-            status: { $in: ["pending", "approved"]}
+            status: { $in: ["pending"]}
         });
+
+        // Create new token
+        const newToken = generateToken(fromUID);
 
         // Send true if requestExists
         if (requestExists) {
             res.status(200).json({
                 message: "Request exists",
                 requestExists: true,
+                token: newToken,
             });
         } else {
             res.status(200).json({
                 message: "Request doesn't exist",
                 requestExists: false,
+                token: newToken,
             });
         };
     } catch (err) {
