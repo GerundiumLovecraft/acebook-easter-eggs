@@ -85,7 +85,8 @@ export function ProfilePage() {
         setFormData({
             email: profile.email || "",
             firstName: profile.profile?.firstName || "",
-            lastName: profile.profile?.lastName || ""
+            lastName: profile.profile?.lastName || "",
+            profilePic: profile.profile?.profilePic || ""
         })
         setSaveError("")
         setIsEditing(true)
@@ -158,6 +159,14 @@ export function ProfilePage() {
         <p className="profile-email">Email: {email}</p>
     );
 
+    const profilePicSection = isEditing ? (
+        <div className="profile-edit-fields">
+            <input name="profilePic" value={formData.profilePic} onChange={handleChange} />
+        </div>
+    ) : (
+        <img className="profile-avatar" src={profilePic} />
+    )
+
     const actionButtons = isEditing ? (
     <>
         {isSaving ? (
@@ -194,8 +203,8 @@ return (
             <div className="profile-page">
                 <div className="profile-card">
                     <div className="profile-header">
-                        <img className="profile-avatar" src={profilePic} />
                         <div className="profile-heading">
+                            {profilePicSection}
                             {nameSection}
                             {emailSection}
                         </div>
