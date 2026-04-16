@@ -8,6 +8,7 @@ import Post from "../../components/Post";
 import { FriendRequestButton } from "./FriendRequestButton";
 import { friendRequestExists, sendFriendRequest } from "../../services/friendRequests"
 import { getFriendList } from "../../services/friends"
+import { isValidEmail, isValidImageUrl } from "../../utils/fieldValidation";
 
 
 export function ProfilePage() {
@@ -17,7 +18,8 @@ export function ProfilePage() {
     const [formData, setFormData] = useState({
         email: "",
         firstName: "",
-        lastName: ""
+        lastName: "",
+        profilePic: ""
     })
     const [saveError, setSaveError] = useState("")
     const [isSaving, setIsSaving] = useState(false)
@@ -111,6 +113,19 @@ export function ProfilePage() {
         setIsSaving(true);
         setSaveError("");
 
+        if (!isValidEmail(formData.email)) {
+            setSaveError("Please enter a valid email address.");
+            setIsSaving(false);
+            return;
+        }
+
+
+        if (!isValidImageUrl(formData.profilePic || "")) {
+            setSaveError("Please enter a valid image URL starting with http:// or https://");
+            setIsSaving(false);
+            return;
+        }
+
         try {
             const result = await updateCurrentUser(formData, token);
 
@@ -121,6 +136,7 @@ export function ProfilePage() {
         } catch (error) {
             setSaveError(error.message || "Could not save profile");
             console.error(error);
+            setIsSaving(false);
         } finally {
             setIsSaving(false);
 
@@ -166,7 +182,13 @@ export function ProfilePage() {
         <div className="profile-edit-fields">
             <div className="profile-field-group">
                 <p className="profile-field-label">Email:</p>
-                <input name="email" value={formData.email} onChange={handleChange} />
+                <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                />
             </div>
         </div>
     ) : (
@@ -177,7 +199,12 @@ export function ProfilePage() {
         <div className="profile-edit-fields">
             <div className="profile-field-group">
                 <p className="profile-field-label">Profile pic:</p>
-                <input name="profilePic" value={formData.profilePic} onChange={handleChange} />
+                <input
+                    type="url"
+                    name="profilePic"
+                    value={formData.profilePic}
+                    onChange={handleChange}
+                />
             </div>
         </div>
     ) : (
