@@ -214,11 +214,11 @@ export function ProfilePage() {
     const actionButtons = isEditing ? (
     <>
         {isSaving ? (
-        <button className="profile-action-button profile-action-button--primary" disabled={true}>
+        <button className="profile-action-button profile-action-button--save" disabled={true}>
             Saving...
         </button>
         ) : (
-        <button className="profile-action-button profile-action-button--primary" onClick={handleSaveClick}>
+        <button className="profile-action-button profile-action-button--save" onClick={handleSaveClick}>
             Save
         </button>
         )}

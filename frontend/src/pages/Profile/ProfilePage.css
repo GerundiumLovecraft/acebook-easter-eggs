@@ -129,6 +129,8 @@
     cursor: pointer;
     transition: opacity 0.2s ease, transform 0.2s ease;
     font-family: inherit;
+    margin-left: 10px;
+    margin-left: 10px;
     }
 
     .profile-action-button:hover {
@@ -143,12 +145,20 @@
     .profile-action-button--primary {
     background: #1877f2;
     color: white;
+    width: 140px;
     }
 
     .profile-action-button--secondary {
     background: #eceeef;
     color: #1c1e21;
     border: 1px solid #d9dde3;
+    width: 90px;
+    }
+
+    .profile-action-button--save {
+    background: #1877f2;
+    color: white;
+    width: 90px;
     }
 
     .profile-action-button--danger {
