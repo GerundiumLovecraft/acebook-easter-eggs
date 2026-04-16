@@ -7,7 +7,7 @@ const UserSchema = new mongoose.Schema({
     // TODO: set required True to first and last Name once Signup form is complete 
     firstName: {type: String, required: true},
     lastName: {type: String, required: true}, 
-    profilePic: {type: String, default: ''}
+    profilePic: {type: String, default: 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png'}
   },
   social: {
     friendList: {type: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}], default: []},
