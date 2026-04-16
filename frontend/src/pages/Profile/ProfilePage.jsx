@@ -1,6 +1,6 @@
 import "./ProfilePage.css";
 import { useParams, useNavigate } from "react-router-dom"
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { getUser, getCurrentUser, updateCurrentUser } from "../../services/users";
 import { formatCreatedAt, formatLastUpdated } from "../../utils/dates";
 import { getPostsByUserId } from "../../services/posts";
@@ -29,15 +29,16 @@ export function ProfilePage() {
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
 
-    useEffect(() => {
+    const loadProfilePage = useCallback(async () => {
         if (!token) {
             navigate("/login");
             return;
         }
 
-        async function loadProfilePage() {
-            try {
-                const [profileData, currentUserData, postsData] = await Promise.all([
+        setLoading(true);
+
+        try {
+            const [profileData, currentUserData, postsData] = await Promise.all([
                 getUser(id, token),
                 getCurrentUser(token),
                 getPostsByUserId(id, token),
@@ -51,7 +52,7 @@ export function ProfilePage() {
 
             if (isOwn) {
                 setFriendshipStatus("self");
-                } else {
+            } else {
                 const [friendListData, friendRequestData] = await Promise.all([
                     getFriendList(token),
                     friendRequestExists(token, id),
@@ -68,16 +69,17 @@ export function ProfilePage() {
                 } else {
                     setFriendshipStatus("none");
                 }
-                }
-            } catch (error) {
-                console.error(error);
-            } finally {
-                setLoading(false);
             }
-    }
-
-    loadProfilePage();
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
     }, [id, token, navigate]);
+
+    useEffect(() => {
+        loadProfilePage();
+    }, [loadProfilePage]);
 
     const isOwnProfile = currentUser?._id === profile?._id;
 
@@ -114,12 +116,14 @@ export function ProfilePage() {
 
             setProfile(result.user);
             setCurrentUser(result.user);
+            await loadProfilePage();
             setIsEditing(false);
         } catch (error) {
             setSaveError(error.message || "Could not save profile");
             console.error(error);
         } finally {
             setIsSaving(false);
+
         }
     }
 
@@ -143,17 +147,27 @@ export function ProfilePage() {
     const { firstName, lastName, profilePic } = profile.profile;
 
     const nameSection = isEditing ? (
-            <div className="profile-name-fields">
+        <div className="profile-name-fields">
+            <div className="profile-field-group">
+                <p className="profile-field-label">First name:</p>
                 <input name="firstName" value={formData.firstName} onChange={handleChange} />
+            </div>
+
+            <div className="profile-field-group">
+                <p className="profile-field-label">Last name:</p>
                 <input name="lastName" value={formData.lastName} onChange={handleChange} />
             </div>
-        ) : (
-            <h1 className="profile-name">{firstName} {lastName}</h1>
-        );
+        </div>
+    ) : (
+        <h1 className="profile-name">{firstName} {lastName}</h1>
+    );
 
     const emailSection = isEditing ? (
         <div className="profile-edit-fields">
-            <input name="email" value={formData.email} onChange={handleChange} />
+            <div className="profile-field-group">
+                <p className="profile-field-label">Email:</p>
+                <input name="email" value={formData.email} onChange={handleChange} />
+            </div>
         </div>
     ) : (
         <p className="profile-email">Email: {email}</p>
@@ -161,11 +175,14 @@ export function ProfilePage() {
 
     const profilePicSection = isEditing ? (
         <div className="profile-edit-fields">
-            <input name="profilePic" value={formData.profilePic} onChange={handleChange} />
+            <div className="profile-field-group">
+                <p className="profile-field-label">Profile pic:</p>
+                <input name="profilePic" value={formData.profilePic} onChange={handleChange} />
+            </div>
         </div>
     ) : (
         <img className="profile-avatar" src={profilePic} />
-    )
+    );
 
     const actionButtons = isEditing ? (
     <>
@@ -203,8 +220,8 @@ return (
             <div className="profile-page">
                 <div className="profile-card">
                     <div className="profile-header">
+                        {profilePicSection}
                         <div className="profile-heading">
-                            {profilePicSection}
                             {nameSection}
                             {emailSection}
                         </div>
