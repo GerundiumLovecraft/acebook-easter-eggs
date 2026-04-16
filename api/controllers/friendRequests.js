@@ -104,7 +104,7 @@ async function sendResponse(req, res) {
         friendRequest.status = updatedStatus;
 
         // Create new token
-        const newToken = generateToken(requestID);
+        const newToken = generateToken(req.user_id);
 
         if (updatedStatus === 'approved') {
             const fromUser = friendRequest.from;
