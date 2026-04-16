@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import "./Friends.css";
 
+import { Link } from "react-router-dom";
+
 function FriendRequests({ friendRequestsObj, requestReponseHandler }) {
 
     let outgoingRequests = friendRequestsObj.outgoing;
@@ -18,6 +20,7 @@ return (
           <ul>
             {incomingRequests.map((req) => (
               <li key={req.from._id} className="request-item">
+
                 <Link to={`/users/${req.from._id}`}>
                     <div className="request-left">
                     <img
@@ -30,6 +33,7 @@ return (
                     </p>
                     </div>
                 </Link>
+
                 <div className="request-actions">
                   <button
                     className="approve-btn"
