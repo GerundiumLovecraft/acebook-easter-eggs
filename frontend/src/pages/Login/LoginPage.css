@@ -84,6 +84,12 @@
     font-weight: 600;
 }
 
+.login-label {
+    float: left;
+}
+
+.error-message {
+    color: rgb(251, 57, 57);
 .login-btn:hover {
     background: #166fe5;
 }

@@ -1,0 +1,20 @@
+.filter-control button {
+    border: none;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    font-family: inherit;
+    margin: 5px;
+}
+
+.filter-control button:hover {
+    opacity: 0.92;
+}
+
+.filter-control button.active {
+    background: #1877f2;
+    color: white;
+}

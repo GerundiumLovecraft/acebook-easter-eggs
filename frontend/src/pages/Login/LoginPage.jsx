@@ -8,6 +8,7 @@ import "./LoginPage.css"
 export function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   async function handleSubmit(event) {
@@ -18,7 +19,7 @@ export function LoginPage() {
       navigate("/posts");
     } catch (err) {
       console.error(err);
-      navigate("/login");
+      setErrorMessage("Invalid email or password.");
     }
   }
 
@@ -39,7 +40,7 @@ export function LoginPage() {
           <p>Enter your email below to login to your account</p>
           <Link to="/signup" className="signup-link">Sign Up</Link>
         </div>
-
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
         <form className="login-form" onSubmit={handleSubmit}>
           
           <div className="form-group">

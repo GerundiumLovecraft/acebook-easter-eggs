@@ -1,7 +1,7 @@
 // docs: https://vitejs.dev/guide/env-and-mode.html
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-export async function getPosts(token) {
+export async function getPosts(token, filter = 'all') {
   const requestOptions = {
     method: "GET",
     headers: {
@@ -9,7 +9,7 @@ export async function getPosts(token) {
     },
   };
 
-  const response = await fetch(`${BACKEND_URL}/posts`, requestOptions);
+  const response = await fetch(`${BACKEND_URL}/posts?filter=${filter}`, requestOptions);
 
   if (response.status !== 200) {
     throw new Error("Unable to fetch posts");

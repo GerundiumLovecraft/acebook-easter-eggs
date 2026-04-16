@@ -3,36 +3,43 @@ import { useNavigate } from "react-router-dom";
 
 import { getPosts } from "../../services/posts";
 import Post from "../../components/Post";
+import "./FeedPage.css";
 
 export function FeedPage() {
   const [posts, setPosts] = useState([]);
+  const [filter, setFilter] = useState("all");
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const loggedIn = token !== null;
-    if (loggedIn) {
-      getPosts(token)
-        .then((data) => {
-          setPosts(data.posts);
-          localStorage.setItem("token", data.token);
-        })
-        .catch((err) => {
-          console.error(err);
-          navigate("/login");
-        });
+    if (!token) {
+      navigate("/login");
     }
-  }, [navigate]);
+
+    getPosts(token, filter)
+      .then((data) => {
+        setPosts(data.posts);
+        localStorage.setItem("token", data.token);
+      })
+      .catch((err) => {
+        console.error(err);
+        navigate("/login");
+      });
+  }, [navigate, filter]);
 
   const token = localStorage.getItem("token");
-  if (!token) {
-    navigate("/login");
-    return;
-  }
 
   return (
     <>
       <h2>Posts</h2>
+      <div className="filter-control">
+        <button onClick={() => setFilter("all")} className={filter === "all" ? "active" : "inactive"}>
+          All posts
+        </button>
+        <button onClick={() => setFilter("friends")} className={filter === "friends" ? "active" : "inactive"}>
+          Friends posts
+        </button>
+      </div>
       <div className="feed" role="feed">
         {posts.map((post) => (
           <Post post={post} key={post._id} token={token} />
