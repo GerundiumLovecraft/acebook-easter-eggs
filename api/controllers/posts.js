@@ -7,7 +7,13 @@ const Notification = require("../models/notification");
 
 async function getAllPosts(req, res) {
   try {
-    const posts = await Post.find().sort({ createdAt: -1 }).populate("user");
+    const filter = req.query.filter;
+    let query = {};
+    if (filter === 'friends') {
+      query = { user: { $in: req.user.social.friendList } };
+    }
+
+    const posts = await Post.find(query).sort({createdAt: -1}).populate('user');
     const postWithCounts = await Promise.all(
       posts.map(async (post) => {
         const commentCount = await Comment.countDocuments({ postId: post._id });
