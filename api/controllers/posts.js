@@ -157,7 +157,7 @@ async function addComment(req, res) {
         if (ownerSocketId) {
           io.to(ownerSocketId).emit("notification", {
             type: "comment",
-            message: "Someone commente on your post",
+            message: "Someone commented on your post!",
             postId: post._id,
           });
         }
